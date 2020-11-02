@@ -18,7 +18,7 @@ same large files in several packages for different Python versions.
    :alt: supported Python versions
    :target: https://pypi.org/project/qt5-applications/
 
-.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/qt-applications/master.svg
+.. |GitHub| image:: https://img.shields.io/github/last-commit/altendky/qt-applications/main.svg
    :alt: source on GitHub
    :target: https://github.com/altendky/qt-applications
 

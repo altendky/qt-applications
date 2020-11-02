@@ -22,4 +22,4 @@ same large files in several packages for different Python versions.
    :alt: source on GitHub
    :target: https://github.com/altendky/qt-applications
 
-.. _`the pyqt5-tools readme`: https://github.com/altendky/pyqt-tools
+.. _`the pyqt-tools readme`: https://github.com/altendky/pyqt-tools

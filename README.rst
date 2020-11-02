@@ -1,11 +1,11 @@
-===========
+===============
 qt-applications
-===========
+===============
 
 
 |PyPI| |Pythons| |GitHub|
 
-Perhaps docs will follow but for now see `the pyqt5-tools readme`_.  This
+Perhaps docs will follow but for now see `the pyqt-tools readme`_.  This
 package provides just the collection of Qt applications to avoid repeating the
 same large files in several packages for different Python versions.
 
@@ -22,4 +22,4 @@ same large files in several packages for different Python versions.
    :alt: source on GitHub
    :target: https://github.com/altendky/qt-applications
 
-.. _`the pyqt5-tools readme`: https://github.com/altendky/pyqt5-tools
+.. _`the pyqt5-tools readme`: https://github.com/altendky/pyqt-tools

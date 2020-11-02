@@ -43,9 +43,9 @@ jobs:
           - qt_version: 5.15.0
           - qt_version: 5.15.1
         bitness:
-           - name: x32
-             action: x86
-             ilammy: x86
+          - name: x32
+            action: x86
+            ilammy: x86
           - name: x64
             action: x64
             ilammy: x64

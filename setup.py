@@ -5,7 +5,11 @@ import sys
 
 here = pathlib.Path(__file__).parent
 
-sys.path.insert(0, os.fspath(here))
+
+fspath = getattr(os, 'fspath', str)
+
+
+sys.path.insert(0, fspath(here))
 # TODO: yuck, put the build command in a separate project and
 #       build-requires it?
 import build

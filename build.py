@@ -1235,7 +1235,7 @@ def write_entry_points(
         '''))
 
         console_scripts = [
-            '{application} = qt5_applications.entrypoints:{function_name}'.format(
+            'qt5{application} = qt5_applications.entrypoints:{function_name}'.format(
                 function_name=application.script_function_name,
                 application=application.original_path.stem,
             )

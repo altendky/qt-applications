@@ -105,4 +105,5 @@ setuptools.setup(
     version=qt5_applications_version,
     include_package_data=True,
     python_requires=">=3.5",
+    install_requires=["msvc-runtime"],
 )

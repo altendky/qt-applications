@@ -52,6 +52,13 @@ def create_environment(reference):
             before=[''],
             after=[sysconfig.get_config_var('LIBDIR')],
         ))
+    if sys.platform == 'win32':
+        environment.update(add_to_env_var_path_list(
+            environment=environment,
+            name='PATH',
+            before=[''],
+            after=[sysconfig.get_path('scripts')],
+        ))
 
     environment.update(add_to_env_var_path_list(
         environment=environment,

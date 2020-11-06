@@ -8,8 +8,12 @@ from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
 
+
+fspath = getattr(os, 'fspath', str)
+
 root = pathlib.Path(__file__).parent
 bin = root.joinpath('Qt', 'bin')
+plugins = root.joinpath('Qt', 'plugins')
 
 _application_filters = {
     'linux': lambda path: True,
@@ -55,5 +59,12 @@ def create_environment(reference):
             before=[''],
             after=[sysconfig.get_path('scripts')],
         ))
+
+    environment.update(add_to_env_var_path_list(
+        environment=environment,
+        name='QT_PLUGIN_PATH',
+        before=[''],
+        after=[fspath(plugins)],
+    ))
 
     return environment

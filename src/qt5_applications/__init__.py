@@ -11,9 +11,9 @@ del get_versions
 
 fspath = getattr(os, 'fspath', str)
 
-root = pathlib.Path(__file__).absolute().parent
-bin = root.joinpath('Qt', 'bin')
-plugins = root.joinpath('Qt', 'plugins')
+_root = pathlib.Path(__file__).absolute().parent
+bin = _root.joinpath('Qt', 'bin')
+plugins = _root.joinpath('Qt', 'plugins')
 
 
 def application_names():

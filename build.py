@@ -42,15 +42,10 @@ class BuildPy(setuptools.command.build_py.build_py):
             lib_path = cwd / build_command.build_lib
             package_path = lib_path / package_name
 
-            results = main(
+            main(
                 package_path=package_path,
                 build_base_path=cwd / build_command.build_base,
             )
-
-            if getattr(self.distribution, 'entry_points', None) is None:
-                self.distribution.entry_points = {}
-            console_scripts = self.distribution.entry_points.setdefault('console_scripts', [])
-            console_scripts.extend(results.console_scripts)
         except:
             # something apparently consumes tracebacks (not exception messages)
             # for OSError at least.  let's avoid that silliness.
@@ -62,11 +57,6 @@ Collector = typing.Callable[
     [pathlib.Path, pathlib.Path],
     typing.Iterable[pathlib.Path],
 ]
-
-
-@attr.s(frozen=True)
-class Results:
-    console_scripts = attr.ib()
 
 
 @attr.s(frozen=True)
@@ -1088,11 +1078,11 @@ def build(configuration: Configuration):
             for action in copy_actions
         }
 
-    checkpoint('Write Entry Points')
-    entry_points_py = destinations.package / 'entrypoints.py'
+    checkpoint('Write Applications dict')
+    applications_py = destinations.package / '_applications.py'
 
-    console_scripts = write_entry_points(
-        entry_points_py=entry_points_py,
+    write_application_dict(
+        python_source_path=applications_py,
         applications=applications,
     )
 
@@ -1105,9 +1095,6 @@ def build(configuration: Configuration):
     for reference, actions in all_copy_actions.items():
         for action in actions:
             action.copy(destination_root=reference)
-
-    checkpoint('Return Results')
-    return Results(console_scripts=console_scripts)
 
 
 def filtered_relative_to(
@@ -1203,42 +1190,20 @@ def install_qt(configuration):
     )
 
 
-def write_entry_points(
-        entry_points_py: pathlib.Path,
+def write_application_dict(
+        python_source_path: pathlib.Path,
         applications: typing.List[AnyApplication],
-) -> typing.List[str]:
-    with entry_points_py.open(newline='') as f:
+) -> None:
+    with python_source_path.open(newline='') as f:
         f.read()
         newlines = identify_preferred_newlines(f)
-    with entry_points_py.open('a', newline=newlines) as f:
-        f.write(textwrap.dedent('''\
-        
-            # ----  start of generated wrapper entry points
-        
-        '''))
+    with python_source_path.open('a', newline=newlines) as f:
+        f.write('application_paths = {\n')
 
         for application in sorted(applications, key=lambda a: a.path_name):
-            partial_def = (
-                '{function_name}'
-                ' = functools.partial(run, application_name={application!r})\n'
-            )
-            partial_def_formatted = partial_def.format(
-                function_name=application.script_function_name,
-                application=application.original_path.stem,
-            )
-            f.write(partial_def_formatted)
+            f.write('    {stem!r}: {name!r},\n'.format(
+                stem=application.original_path.stem,
+                name=application.original_path.name,
+            ))
 
-        f.write(textwrap.dedent('''\
-
-            # ----  end of generated wrapper entry points
-
-        '''))
-
-        console_scripts = [
-            'qt5{application} = qt5_applications.entrypoints:{function_name}'.format(
-                function_name=application.script_function_name,
-                application=application.original_path.stem,
-            )
-            for application in applications
-        ]
-    return console_scripts
+        f.write('}\n')

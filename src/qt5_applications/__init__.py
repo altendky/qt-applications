@@ -1,7 +1,7 @@
 import os
 import pathlib
-import sys
-import sysconfig
+
+import qt5_applications._applications
 
 
 from ._version import get_versions
@@ -11,60 +11,14 @@ del get_versions
 
 fspath = getattr(os, 'fspath', str)
 
-root = pathlib.Path(__file__).parent
-bin = root.joinpath('Qt', 'bin')
-plugins = root.joinpath('Qt', 'plugins')
+_root = pathlib.Path(__file__).absolute().parent
+bin = _root.joinpath('Qt', 'bin')
+plugins = _root.joinpath('Qt', 'plugins')
 
-_application_filters = {
-    'linux': lambda path: True,
-    'win32': lambda path: path.suffix == '.exe'
-}
-_application_filter = _application_filters[sys.platform]
 
-_applications = {
-    path.stem: path
-    for path in bin.iterdir()
-    if _application_filter(path=path)
-}
+def application_names():
+    return [*qt5_applications._applications.application_paths.keys()]
 
 
 def application_path(name):
-    return _applications[name]
-
-
-def add_to_env_var_path_list(environment, name, before, after):
-    return {
-        name: os.pathsep.join((
-            *before,
-            environment.get(name, ''),
-            *after
-        ))
-    }
-
-
-def create_environment(reference):
-    environment = dict(reference)
-
-    if sys.platform == 'linux':
-        environment.update(add_to_env_var_path_list(
-            environment=environment,
-            name='LD_LIBRARY_PATH',
-            before=[''],
-            after=[sysconfig.get_config_var('LIBDIR')],
-        ))
-    if sys.platform == 'win32':
-        environment.update(add_to_env_var_path_list(
-            environment=environment,
-            name='PATH',
-            before=[''],
-            after=[sysconfig.get_path('scripts')],
-        ))
-
-    environment.update(add_to_env_var_path_list(
-        environment=environment,
-        name='QT_PLUGIN_PATH',
-        before=[''],
-        after=[fspath(plugins)],
-    ))
-
-    return environment
+    return bin.joinpath(qt5_applications._applications.application_paths[name])

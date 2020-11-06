@@ -24,3 +24,4 @@ different Python versions.  These files are not intended to be used directly.
    :target: https://github.com/altendky/qt-applications
 
 .. _`the pyqt-tools readme`: https://github.com/altendky/pyqt-tools#pyqt-tools
+.. _`the qt-tools readme`: https://github.com/altendky/qt-tools#qt-tools

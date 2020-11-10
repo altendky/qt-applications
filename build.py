@@ -1106,19 +1106,27 @@ def build(configuration: Configuration):
     all_copy_actions = {
         destinations.qt: copy_actions,
         destinations.package: set(),
+        destinations.qt_bin: set(),
     }
-
-    checkpoint('Execute Copy Actions')
-    for reference, actions in all_copy_actions.items():
-        for action in actions:
-            action.copy(destination_root=reference)
 
     lines = [
         '[Paths]',
         'plugins = ../plugins',
     ]
-    with qt_paths.conf.open('w', encoding='utf-8', newline='\n') as f:
+    qt_conf_source = configuration.build_path.joinpath('qt.conf')
+
+    with qt_conf_source.open('w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(lines))
+
+    all_copy_actions[destinations.qt_bin].add(FileCopyAction(
+        source=qt_conf_source,
+        destination=qt_paths.conf,
+    ))
+
+    checkpoint('Execute Copy Actions')
+    for reference, actions in all_copy_actions.items():
+        for action in actions:
+            action.copy(destination_root=reference)
 
 
 def filtered_relative_to(

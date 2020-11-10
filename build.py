@@ -1111,6 +1111,14 @@ def build(configuration: Configuration):
         for action in actions:
             action.copy(destination_root=reference)
 
+    with qt_paths.bin.joinpath('qt.conf').open('w', encoding='utf-8', newline='\n') as f:
+        f.write(
+            '\n'.join[
+                '[Paths]',
+                'plugins = ../plugins',
+            ]
+        )
+
 
 def filtered_relative_to(
         base: pathlib.Path,

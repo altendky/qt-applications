@@ -1021,11 +1021,23 @@ def build(configuration: Configuration):
     )
 
     checkpoint('Define Plugins')
-    platform_plugin_names = {
-        'linux': ['xcb', 'minimal'],
-        'win32': ['minimal'],
-        'darwin': ['cocoa'],
-    }[configuration.platform]
+    if configuration.platform == 'win32':
+        platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
+        stems = [path.stem for path in platform_plugin_files]
+        non_debug_platform_plugin_files = [
+            path
+            for path in platform_plugin_files
+            if not (path.stem.endswith('d') and path.stem[-1] in stems)
+        ]
+        platform_plugin_names = [
+            path.name
+            for path in non_debug_platform_plugin_files
+
+        ]
+    elif configuration.platform == 'linux':
+        platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
+        platform_plugin_names = [path.name for path in platform_plugin_files]
+    # elif configuration.platform == 'darwin':
 
     platform_plugin_type = {
         'linux': LinuxPlugin,

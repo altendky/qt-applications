@@ -1109,19 +1109,20 @@ def build(configuration: Configuration):
         destinations.qt_bin: set(),
     }
 
-    lines = [
-        '[Paths]',
-        'plugins = ../plugins',
-    ]
-    qt_conf_source = configuration.build_path.joinpath('qt.conf')
+    if configuration.platform == 'win32':
+        lines = [
+            '[Paths]',
+            'plugins = ../plugins',
+        ]
+        qt_conf_source = configuration.build_path.joinpath('qt.conf')
 
-    with qt_conf_source.open('w', encoding='utf-8', newline='\n') as f:
-        f.write('\n'.join(lines))
+        with qt_conf_source.open('w', encoding='utf-8', newline='\n') as f:
+            f.write('\n'.join(lines))
 
-    all_copy_actions[destinations.qt_bin].add(FileCopyAction.from_path(
-        source=qt_conf_source,
-        root=qt_conf_source.parent,
-    ))
+        all_copy_actions[destinations.qt_bin].add(FileCopyAction.from_path(
+            source=qt_conf_source,
+            root=qt_conf_source.parent,
+        ))
 
     checkpoint('Execute Copy Actions')
     for reference, actions in all_copy_actions.items():

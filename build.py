@@ -1027,7 +1027,7 @@ def build(configuration: Configuration):
         non_debug_platform_plugin_files = [
             path
             for path in platform_plugin_files
-            if not (path.stem.endswith('d') and path.stem[-1] in stems)
+            if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
         platform_plugin_names = [
             path.stem[len('q'):]

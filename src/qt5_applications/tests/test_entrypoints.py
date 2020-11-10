@@ -39,13 +39,6 @@ def create_environment(reference):
             after=[sysconfig.get_path('scripts')],
         ))
 
-    environment.update(add_to_env_var_path_list(
-        environment=environment,
-        name='QT_PLUGIN_PATH',
-        before=[''],
-        after=[fspath(qt5_applications.plugins)],
-    ))
-
     return environment
 
 

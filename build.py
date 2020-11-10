@@ -1030,13 +1030,13 @@ def build(configuration: Configuration):
             if not (path.stem.endswith('d') and path.stem[-1] in stems)
         ]
         platform_plugin_names = [
-            path.name
+            path.stem
             for path in non_debug_platform_plugin_files
 
         ]
     elif configuration.platform == 'linux':
         platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
-        platform_plugin_names = [path.name for path in platform_plugin_files]
+        platform_plugin_names = [path.stem for path in platform_plugin_files]
     # elif configuration.platform == 'darwin':
 
     platform_plugin_type = {

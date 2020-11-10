@@ -578,6 +578,7 @@ application_types_by_platform = {   # typing.Dict[str, typing.List[AnyApplicatio
 @attr.s(frozen=True)
 class QtPaths:
     compiler = attr.ib()
+    conf = attr.ib()
     bin = attr.ib()
     lib = attr.ib()
     translation = attr.ib()
@@ -622,6 +623,7 @@ class QtPaths:
 
         return cls(
             compiler=compiler_path,
+            conf=bin_path.joinpath('qt.conf'),
             bin=bin_path,
             lib=lib_path,
             translation=translation_path,
@@ -1111,13 +1113,12 @@ def build(configuration: Configuration):
         for action in actions:
             action.copy(destination_root=reference)
 
-    with qt_paths.bin.joinpath('qt.conf').open('w', encoding='utf-8', newline='\n') as f:
-        f.write(
-            '\n'.join[
-                '[Paths]',
-                'plugins = ../plugins',
-            ]
-        )
+    lines = [
+        '[Paths]',
+        'plugins = ../plugins',
+    ]
+    with qt_paths.conf.open('w', encoding='utf-8', newline='\n') as f:
+        f.write('\n'.join(lines))
 
 
 def filtered_relative_to(

@@ -18,4 +18,4 @@ def _application_names():
 
 
 def _application_path(name):
-    return bin.joinpath(qt5_applications._applications.application_paths[name])
+    return _bin.joinpath(qt5_applications._applications.application_paths[name])

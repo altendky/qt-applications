@@ -578,6 +578,7 @@ application_types_by_platform = {   # typing.Dict[str, typing.List[AnyApplicatio
 @attr.s(frozen=True)
 class QtPaths:
     compiler = attr.ib()
+    conf = attr.ib()
     bin = attr.ib()
     lib = attr.ib()
     translation = attr.ib()
@@ -622,6 +623,7 @@ class QtPaths:
 
         return cls(
             compiler=compiler_path,
+            conf=bin_path.joinpath('qt.conf'),
             bin=bin_path,
             lib=lib_path,
             translation=translation_path,
@@ -1104,7 +1106,23 @@ def build(configuration: Configuration):
     all_copy_actions = {
         destinations.qt: copy_actions,
         destinations.package: set(),
+        destinations.qt_bin: set(),
     }
+
+    if configuration.platform == 'win32':
+        lines = [
+            '[Paths]',
+            'prefix = ../',
+        ]
+        qt_conf_source = configuration.build_path.joinpath('qt.conf')
+
+        with qt_conf_source.open('w', encoding='utf-8', newline='\n') as f:
+            f.write('\n'.join(lines))
+
+        all_copy_actions[destinations.qt_bin].add(FileCopyAction.from_path(
+            source=qt_conf_source,
+            root=qt_conf_source.parent,
+        ))
 
     checkpoint('Execute Copy Actions')
     for reference, actions in all_copy_actions.items():

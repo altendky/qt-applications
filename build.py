@@ -1118,9 +1118,9 @@ def build(configuration: Configuration):
     with qt_conf_source.open('w', encoding='utf-8', newline='\n') as f:
         f.write('\n'.join(lines))
 
-    all_copy_actions[destinations.qt_bin].add(FileCopyAction(
+    all_copy_actions[destinations.qt_bin].add(FileCopyAction.from_path(
         source=qt_conf_source,
-        destination=qt_paths.conf,
+        root=qt_conf_source.parent,
     ))
 
     checkpoint('Execute Copy Actions')

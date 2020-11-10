@@ -1112,7 +1112,7 @@ def build(configuration: Configuration):
     if configuration.platform == 'win32':
         lines = [
             '[Paths]',
-            'plugins = ../plugins',
+            'prefix = ../',
         ]
         qt_conf_source = configuration.build_path.joinpath('qt.conf')
 

@@ -8,6 +8,7 @@ requires = [
    "hyperlink",
    "macholib",
    "msvc-runtime; sys_platform == 'win32'",
+   "pip",
    "pylddwrap",
    "requests",
    "setuptools",

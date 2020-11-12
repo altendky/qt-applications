@@ -1124,6 +1124,13 @@ def build(configuration: Configuration):
             root=qt_conf_source.parent,
         ))
 
+        msvc_dir = configuration.build_path.joinpath("msvc_runtime")
+        msvc_dir.mkdir(parents=True, exist_ok=True)
+
+        all_copy_actions[destinations.qt_bin].update(
+            msvc_copy_actions(target=msvc_dir),
+        )
+
     checkpoint('Execute Copy Actions')
     for reference, actions in all_copy_actions.items():
         for action in actions:
@@ -1240,3 +1247,27 @@ def write_application_dict(
             ))
 
         f.write('}\n')
+
+
+def msvc_copy_actions(target: pathlib.Path) -> typing.List[FileCopyAction]:
+    subprocess.run(
+        [
+            sys.executable,
+            '-m',
+            'pip',
+            'install',
+            '--target',
+            fspath(target),
+            'msvc-runtime',
+        ],
+        check=True,
+    )
+
+    scripts = target.joinpath('Scripts')
+
+    copy_actions = [
+        FileCopyAction.from_path(source=path.absolute(), root=scripts)
+        for path in scripts.glob('*.[Dd][Ll][Ll]')
+    ]
+
+    return copy_actions

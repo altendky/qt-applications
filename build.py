@@ -1127,7 +1127,7 @@ def build(configuration: Configuration):
         msvc_dir = configuration.build_path.joinpath("msvc_runtime")
         msvc_dir.mkdir(parents=True, exist_ok=True)
 
-        all_copy_actions[destinations.qt_bin].extend(
+        all_copy_actions[destinations.qt_bin].update(
             msvc_copy_actions(target=msvc_dir),
         )
 

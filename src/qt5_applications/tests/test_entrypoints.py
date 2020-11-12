@@ -46,7 +46,7 @@ def test_designer():
     with pytest.raises(subprocess.TimeoutExpired):
         subprocess.run(
             [
-                fspath(qt5_applications.application_path('designer')),
+                fspath(qt5_applications._application_path('designer')),
             ],
             check=True,
             env={**create_environment(os.environ), 'QT_DEBUG_PLUGINS': '1'},
@@ -58,7 +58,7 @@ def test_qmlscene():
     with pytest.raises(subprocess.TimeoutExpired):
         subprocess.run(
             [
-                fspath(qt5_applications.application_path('qmlscene')),
+                fspath(qt5_applications._application_path('qmlscene')),
             ],
             check=True,
             env={**create_environment(os.environ), 'QT_DEBUG_PLUGINS': '1'},
@@ -69,7 +69,7 @@ def test_qmlscene():
 # def test_language():
 #     completed_process = subprocess.run(
 #         [
-#             fspath(qt5_applications.application_path('qtdiag')),
+#             fspath(qt5_applications._application_path('qtdiag')),
 #         ],
 #         check=True,
 #         env={**os.environ, 'LANGUAGE': 'de_DE'},

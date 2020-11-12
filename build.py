@@ -1265,7 +1265,7 @@ def msvc_copy_actions(target: pathlib.Path) -> typing.List[FileCopyAction]:
 
     copy_actions = [
         FileCopyAction.from_path(source=path.absolute(), root=target)
-        for path in target.glob('*.[Dd][lL][lL]')
+        for path in target.joinpath('scripts').glob('*.[Dd][Ll][Ll]')
     ]
 
     return copy_actions

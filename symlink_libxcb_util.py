@@ -17,7 +17,7 @@ print(completed_process.stdout)
     if 'libxcb-util' in line
 ]
 
-existing = pathlib.Path(xcb_util_line.split('=>')[1])
-new = existing.with_suffix('.0')
+existing = pathlib.Path(xcb_util_line.split('=>')[1].strip())
+new = existing.with_suffix('.1')
 new.symlink_to(existing)
 

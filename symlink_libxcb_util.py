@@ -18,6 +18,6 @@ print(completed_process.stdout)
 ]
 
 existing = pathlib.Path(xcb_util_line.split('=>')[1])
-new = existing_xcb_util_path.with_suffix('.0')
+new = existing.with_suffix('.0')
 new.symlink_to(existing)
 

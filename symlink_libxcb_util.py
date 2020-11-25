@@ -6,14 +6,13 @@ completed_process = subprocess.run(
     ['ldconfig', '-p'],
     check=True,
     stdout=subprocess.PIPE,
-    encoding='utf-8',
 )
 
 print(completed_process.stdout)
 
 [xcb_util_line] = [
     line
-    for line in completed_process.stdout.splitlines()
+    for line in completed_process.stdout.decode('utf-8').splitlines()
     if 'libxcb-util' in line
 ]
 

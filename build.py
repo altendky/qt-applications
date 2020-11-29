@@ -1013,7 +1013,7 @@ def build(configuration: Configuration):
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
         all_plugin_paths = [
-            *qt_paths.plugins.joinpath('platform').glob('*'),
+            *qt_paths.plugins.joinpath('platforms').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
         stems = [path.stem for path in all_plugin_paths]
@@ -1029,7 +1029,7 @@ def build(configuration: Configuration):
         # ]
     elif configuration.platform == 'linux':
         plugin_paths = [
-            *qt_paths.plugins.joinpath('platform').glob('*'),
+            *qt_paths.plugins.joinpath('platforms').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
         # plugin_names = [

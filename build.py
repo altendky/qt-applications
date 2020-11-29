@@ -935,7 +935,7 @@ class DarwinPlugin:
     def from_name(
             cls: typing.Type[T],
             path: pathlib.Path,
-            plugin_path: pathlib.Path,
+            reference_path: pathlib.Path,
             lib_path: pathlib.Path,
     ) -> T:
         copy_actions = darwin_executable_copy_actions(

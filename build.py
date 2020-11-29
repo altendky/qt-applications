@@ -906,7 +906,7 @@ class Win32Plugin:
     copy_actions = attr.ib()
 
     @classmethod
-    def from_name(
+    def from_path(
             cls: typing.Type[T],
             path: pathlib.Path,
             reference_path: pathlib.Path,
@@ -932,7 +932,7 @@ class DarwinPlugin:
     copy_actions = attr.ib()
 
     @classmethod
-    def from_name(
+    def from_path(
             cls: typing.Type[T],
             path: pathlib.Path,
             reference_path: pathlib.Path,

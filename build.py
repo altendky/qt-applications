@@ -585,7 +585,7 @@ class QtPaths:
     qmake = attr.ib()
     windeployqt = attr.ib()
     applications = attr.ib()
-    platform_plugins = attr.ib()
+    plugins = attr.ib()
 
     @classmethod
     def build(
@@ -630,7 +630,7 @@ class QtPaths:
             qmake=(bin_path / 'qmake').with_suffix(qmake_suffix),
             windeployqt=windeployqt,
             applications=applications,
-            platform_plugins=compiler_path / 'plugins' / 'platforms',
+            plugins=compiler_path / 'plugins',
         )
 
 
@@ -882,15 +882,11 @@ class LinuxPlugin:
     copy_actions = attr.ib()
 
     @classmethod
-    def from_name(
+    def from_path(
             cls: typing.Type[T],
-            name: str,
+            path: pathlib.Path,
             reference_path: pathlib.Path,
-            plugin_path: pathlib.Path,
     ) -> T:
-        file_name = 'libq{}.so'.format(name)
-        path = plugin_path / file_name
-
         copy_actions = linux_executable_copy_actions(
             source_path=path,
             reference_path=reference_path,
@@ -910,16 +906,12 @@ class Win32Plugin:
     copy_actions = attr.ib()
 
     @classmethod
-    def from_name(
+    def from_path(
             cls: typing.Type[T],
-            name: str,
+            path: pathlib.Path,
             reference_path: pathlib.Path,
-            plugin_path: pathlib.Path,
             windeployqt: pathlib.Path,
     ) -> T:
-        file_name = 'q{}.dll'.format(name)
-        path = plugin_path / file_name
-
         copy_actions = win32_executable_copy_actions(
             source_path=path,
             reference_path=reference_path,
@@ -940,16 +932,12 @@ class DarwinPlugin:
     copy_actions = attr.ib()
 
     @classmethod
-    def from_name(
+    def from_path(
             cls: typing.Type[T],
-            name: str,
+            path: pathlib.Path,
             reference_path: pathlib.Path,
-            plugin_path: pathlib.Path,
             lib_path: pathlib.Path,
     ) -> T:
-        file_name = 'libq{}.dylib'.format(name)
-        path = plugin_path / file_name
-
         copy_actions = darwin_executable_copy_actions(
             source_path=path,
             reference_path=reference_path,
@@ -1024,27 +1012,24 @@ def build(configuration: Configuration):
 
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
-        platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
-        stems = [path.stem for path in platform_plugin_files]
-        non_debug_platform_plugin_files = [
+        all_plugin_paths = [
+            *qt_paths.plugins.joinpath('platforms').glob('*'),
+            *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
+        ]
+        stems = [path.stem for path in all_plugin_paths]
+        plugin_paths = [
             path
-            for path in platform_plugin_files
+            for path in all_plugin_paths
             if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
-        platform_plugin_names = [
-            path.stem[len('q'):]
-            for path in non_debug_platform_plugin_files
-
-        ]
     elif configuration.platform == 'linux':
-        platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
-        platform_plugin_names = [
-            path.stem[len('libq'):]
-            for path in platform_plugin_files
+        plugin_paths = [
+            *qt_paths.plugins.joinpath('platforms').glob('*'),
+            *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
     # elif configuration.platform == 'darwin':
 
-    platform_plugin_type = {
+    plugin_type = {
         'linux': LinuxPlugin,
         'win32': Win32Plugin,
         'darwin': DarwinPlugin,
@@ -1057,14 +1042,13 @@ def build(configuration: Configuration):
     elif configuration.platform == 'darwin':
         extras['lib_path'] = qt_paths.lib
 
-    platform_plugins = [
-        platform_plugin_type.from_name(
-            name=name,
-            plugin_path=qt_paths.platform_plugins,
+    plugins = [
+        plugin_type.from_path(
+            path=path,
             reference_path=qt_paths.compiler,
             **extras,
         )
-        for name in platform_plugin_names
+        for path in plugin_paths
     ]
 
     checkpoint('Build Application And Platform Plugin Copy Actions')
@@ -1075,7 +1059,7 @@ def build(configuration: Configuration):
         ),
         *itertools.chain.from_iterable(
             plugin.copy_actions
-            for plugin in platform_plugins
+            for plugin in plugins
         ),
         *(
             FileCopyAction.from_path(

@@ -1012,14 +1012,14 @@ def build(configuration: Configuration):
 
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
-        plugin_paths = [
+        all_plugin_paths = [
             *qt_paths.plugins.joinpath('platform').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
-        stems = [path.stem for path in plugin_paths]
-        non_debug_plugin_paths = [
+        stems = [path.stem for path in all_plugin_paths]
+        plugin_paths = [
             path
-            for path in plugin_paths
+            for path in all_plugin_paths
             if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
         # plugin_names = [

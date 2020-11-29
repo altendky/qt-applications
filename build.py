@@ -882,15 +882,11 @@ class LinuxPlugin:
     copy_actions = attr.ib()
 
     @classmethod
-    def from_name(
+    def from_path(
             cls: typing.Type[T],
-            name: str,
+            path: pathlib.Path,
             reference_path: pathlib.Path,
-            plugin_path: pathlib.Path,
     ) -> T:
-        file_name = 'libq{}.so'.format(name)
-        path = plugin_path / file_name
-
         copy_actions = linux_executable_copy_actions(
             source_path=path,
             reference_path=reference_path,
@@ -912,14 +908,10 @@ class Win32Plugin:
     @classmethod
     def from_name(
             cls: typing.Type[T],
-            name: str,
+            path: pathlib.Path,
             reference_path: pathlib.Path,
-            plugin_path: pathlib.Path,
             windeployqt: pathlib.Path,
     ) -> T:
-        file_name = 'q{}.dll'.format(name)
-        path = plugin_path / file_name
-
         copy_actions = win32_executable_copy_actions(
             source_path=path,
             reference_path=reference_path,
@@ -942,14 +934,10 @@ class DarwinPlugin:
     @classmethod
     def from_name(
             cls: typing.Type[T],
-            name: str,
-            reference_path: pathlib.Path,
+            path: pathlib.Path,
             plugin_path: pathlib.Path,
             lib_path: pathlib.Path,
     ) -> T:
-        file_name = 'libq{}.dylib'.format(name)
-        path = plugin_path / file_name
-
         copy_actions = darwin_executable_copy_actions(
             source_path=path,
             reference_path=reference_path,
@@ -1024,30 +1012,30 @@ def build(configuration: Configuration):
 
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
-        plugin_files = [
+        plugin_paths = [
             *qt_paths.plugins.joinpath('platform').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
-        stems = [path.stem for path in plugin_files]
-        non_debug_plugin_files = [
+        stems = [path.stem for path in plugin_paths]
+        non_debug_plugin_paths = [
             path
-            for path in plugin_files
+            for path in plugin_paths
             if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
-        plugin_names = [
-            path.stem[len('q'):]
-            for path in non_debug_plugin_files
-
-        ]
+        # plugin_names = [
+        #     (path.parent, path.stem[len('q'):])
+        #     for path in non_debug_plugin_files
+        #
+        # ]
     elif configuration.platform == 'linux':
-        plugin_files = [
+        plugin_paths = [
             *qt_paths.plugins.joinpath('platform').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
-        plugin_names = [
-            path.stem[len('libq'):]
-            for path in plugin_files
-        ]
+        # plugin_names = [
+        #     (path.parent, path.stem[len('libq'):])
+        #     for path in plugin_files
+        # ]
     # elif configuration.platform == 'darwin':
 
     plugin_type = {
@@ -1064,13 +1052,12 @@ def build(configuration: Configuration):
         extras['lib_path'] = qt_paths.lib
 
     plugins = [
-        plugin_type.from_name(
-            name=name,
-            plugin_path=qt_paths.plugins,
+        plugin_type.from_path(
+            path=path,
             reference_path=qt_paths.compiler,
             **extras,
         )
-        for name in plugin_names
+        for path in plugin_paths
     ]
 
     checkpoint('Build Application And Platform Plugin Copy Actions')

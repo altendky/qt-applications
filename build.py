@@ -1022,20 +1022,11 @@ def build(configuration: Configuration):
             for path in all_plugin_paths
             if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
-        # plugin_names = [
-        #     (path.parent, path.stem[len('q'):])
-        #     for path in non_debug_plugin_files
-        #
-        # ]
     elif configuration.platform == 'linux':
         plugin_paths = [
             *qt_paths.plugins.joinpath('platforms').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
-        # plugin_names = [
-        #     (path.parent, path.stem[len('libq'):])
-        #     for path in plugin_files
-        # ]
     # elif configuration.platform == 'darwin':
 
     plugin_type = {

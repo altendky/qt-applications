@@ -585,7 +585,7 @@ class QtPaths:
     qmake = attr.ib()
     windeployqt = attr.ib()
     applications = attr.ib()
-    platform_plugins = attr.ib()
+    plugins = attr.ib()
 
     @classmethod
     def build(
@@ -630,7 +630,7 @@ class QtPaths:
             qmake=(bin_path / 'qmake').with_suffix(qmake_suffix),
             windeployqt=windeployqt,
             applications=applications,
-            platform_plugins=compiler_path / 'plugins' / 'platforms',
+            plugins=compiler_path / 'plugins',
         )
 
 
@@ -1024,27 +1024,33 @@ def build(configuration: Configuration):
 
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
-        platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
-        stems = [path.stem for path in platform_plugin_files]
-        non_debug_platform_plugin_files = [
+        plugin_files = [
+            *qt_paths.plugins.joinpath('platform').glob('*'),
+            *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
+        ]
+        stems = [path.stem for path in plugin_files]
+        non_debug_plugin_files = [
             path
-            for path in platform_plugin_files
+            for path in plugin_files
             if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
-        platform_plugin_names = [
+        plugin_names = [
             path.stem[len('q'):]
-            for path in non_debug_platform_plugin_files
+            for path in non_debug_plugin_files
 
         ]
     elif configuration.platform == 'linux':
-        platform_plugin_files = list(qt_paths.platform_plugins.glob('*'))
-        platform_plugin_names = [
+        plugin_files = [
+            *qt_paths.plugins.joinpath('platform').glob('*'),
+            *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
+        ]
+        plugin_names = [
             path.stem[len('libq'):]
-            for path in platform_plugin_files
+            for path in plugin_files
         ]
     # elif configuration.platform == 'darwin':
 
-    platform_plugin_type = {
+    plugin_type = {
         'linux': LinuxPlugin,
         'win32': Win32Plugin,
         'darwin': DarwinPlugin,
@@ -1057,14 +1063,14 @@ def build(configuration: Configuration):
     elif configuration.platform == 'darwin':
         extras['lib_path'] = qt_paths.lib
 
-    platform_plugins = [
-        platform_plugin_type.from_name(
+    plugins = [
+        plugin_type.from_name(
             name=name,
-            plugin_path=qt_paths.platform_plugins,
+            plugin_path=qt_paths.plugins,
             reference_path=qt_paths.compiler,
             **extras,
         )
-        for name in platform_plugin_names
+        for name in plugin_names
     ]
 
     checkpoint('Build Application And Platform Plugin Copy Actions')
@@ -1075,7 +1081,7 @@ def build(configuration: Configuration):
         ),
         *itertools.chain.from_iterable(
             plugin.copy_actions
-            for plugin in platform_plugins
+            for plugin in plugins
         ),
         *(
             FileCopyAction.from_path(

@@ -43,6 +43,7 @@ jobs:
           - qt_version: 5.15.0
           - qt_version: 5.15.1
           - qt_version: 5.15.2
+          - qt_version: 6.0.0
         bitness:
           - name: x32
             action: x86
@@ -172,6 +173,7 @@ jobs:
           - qt_version: 5.15.0
           - qt_version: 5.15.1
           - qt_version: 5.15.2
+          - qt_version: 6.0.0
         bitness:
           - name: x32
             action: x86

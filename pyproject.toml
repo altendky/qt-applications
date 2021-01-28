@@ -1,7 +1,8 @@
 [build-system]
 requires = [
    "attrs",
-   "aqtinstall",
+   # >= 1.0.0b1 for Qt6 support
+   "aqtinstall >= 1.0.0b1",
    # != 0.10.0 for https://github.com/miurahr/py7zr/issues/252
    "py7zr != 0.10.0",
    "importlib-metadata",

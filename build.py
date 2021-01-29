@@ -212,13 +212,19 @@ def create_script_function_name(path: pathlib.Path):
 def linuxdeployqt_substitute_list_source(
         target,
 ) -> typing.List[pathlib.Path]:
-    paths = [
-        dependency.path
-        for dependency in lddwrap.list_dependencies(
-            path=target,
-        )
-        if dependency.path is not None
-    ]
+    try:
+        paths = [
+            dependency.path
+            for dependency in lddwrap.list_dependencies(
+                path=target,
+            )
+            if dependency.path is not None
+        ]
+    except RuntimeError as e:
+        if "Failed to ldd external" not in str(e):
+            raise
+
+        paths = []
 
     return paths
 

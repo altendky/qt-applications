@@ -56,6 +56,7 @@ def pad_version(v, segment_count=3):
 # TODO: really doesn't seem quite proper here and probably should come
 #       in some other way?
 qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.1'))
+qt_major_version = qt_version.partition('.')[0]
 
 qt5_applications_wrapper_version = versioneer.get_versions()['version']
 qt5_applications_version = '{}.{}'.format(qt_version, qt5_applications_wrapper_version)
@@ -74,7 +75,7 @@ class Dist(setuptools.Distribution):
 
 
 setuptools.setup(
-    name="qt5-applications",
+    name="qt{}-applications".format(qt_major_version),
     description="The collection of Qt tools easily installable in Python",
     long_description=readme,
     long_description_content_type='text/x-rst',

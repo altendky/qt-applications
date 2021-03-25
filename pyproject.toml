@@ -10,7 +10,7 @@ requires = [
    "macholib",
    "msvc-runtime; sys_platform == 'win32'",
    "pip",
-   "pylddwrap",
+   "pylddwrap @ git+https://github.com/altendky/pylddwrap@ignore_messages",
    "requests",
    "setuptools",
    "versioneer-518 == 0.18",

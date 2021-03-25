@@ -1,6 +1,25 @@
+import importlib
 import pathlib
+import pkg_resources
 
-import qt5_applications._applications
+major = int(pkg_resources.get_distribution(__name__).version.partition(".")[0])
+
+
+m = {
+    "pyqt_tools": "pyqt{major}_tools".format(major=major),
+    "pyqt_plugins": "pyqt{major}_plugins".format(major=major),
+    "qt_tools": "qt{major}_tools".format(major=major),
+    "qt_applications": "qt{major}_applications".format(major=major),
+}
+
+
+def import_it(*segments):
+    majored = [m[segments[0]], *segments[1:]]
+    return importlib.import_module(".".join(majored))
+
+
+qt_applications = import_it("qt_applications")
+import_it("qt_applications", "_applications")
 
 
 from ._version import get_versions
@@ -14,8 +33,8 @@ _plugins = _root.joinpath('Qt', 'plugins')
 
 
 def _application_names():
-    return [*qt5_applications._applications.application_paths.keys()]
+    return [*qt_applications._applications.application_paths.keys()]
 
 
 def _application_path(name):
-    return _bin.joinpath(qt5_applications._applications.application_paths[name])
+    return _bin.joinpath(qt_applications._applications.application_paths[name])

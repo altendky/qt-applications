@@ -205,8 +205,14 @@ jobs:
           - name: 5.15.2
             env: 5.15.2
             major: 5
+          - name: 6.0.0
+            env: 6.0.0
+            major: 6
           - name: 6.0.1
-            env: 6.0.1
+            env: 6.0.
+            major: 6
+          - name: 6.0.2
+            env: 6.0.2
             major: 6
         bitness:
           - name: x32

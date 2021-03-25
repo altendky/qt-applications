@@ -74,8 +74,12 @@ class Dist(setuptools.Distribution):
         return True
 
 
+distribution_name = "qt{}-applications".format(qt_major_version)
+import_name = distribution_name.replace('-', '_')
+
+
 setuptools.setup(
-    name="qt{}-applications".format(qt_major_version),
+    name=distribution_name,
     description="The collection of Qt tools easily installable in Python",
     long_description=readme,
     long_description_content_type='text/x-rst',
@@ -101,8 +105,8 @@ setuptools.setup(
     ],
     cmdclass={'bdist_wheel': BdistWheel, 'build_py': build.BuildPy},
     distclass=Dist,
-    packages=setuptools.find_packages('src'),
-    package_dir={'': 'src'},
+    packages=[package.replace('qt_applications', import_name) for package in setuptools.find_packages('src')],
+    package_dir={import_name: 'src/qt_applications'},
     version=qt5_applications_version,
     include_package_data=True,
     python_requires=">=3.5",

@@ -196,30 +196,39 @@ jobs:
           - name: 5.14.0
             env: 5.14.0
             major: 5
+            tox: qt5
           - name: 5.14.1
             env: 5.14.1
             major: 5
+            tox: qt5
           - name: 5.14.2
             env: 5.14.2
             major: 5
+            tox: qt5
           - name: 5.15.0
             env: 5.15.0
             major: 5
+            tox: qt5
           - name: 5.15.1
             env: 5.15.1
             major: 5
+            tox: qt5
           - name: 5.15.2
             env: 5.15.2
             major: 5
+            tox: qt5
           - name: 6.0.0
             env: 6.0.0
             major: 6
+            tox: qt6
           - name: 6.0.1
             env: 6.0.1
             major: 6
+            tox: qt6
           - name: 6.0.2
             env: 6.0.2
             major: 6
+            tox: qt6
         bitness:
           - name: x32
             action: x86
@@ -295,7 +304,7 @@ jobs:
       - uses: altendky/QTBUG-88688-libxcb-util@v3
       - name: Test
         run: |
-          tox -e ${{ matrix.python.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
+          tox -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
   maybe_publish:
     name: Maybe Publish
     runs-on: ubuntu-latest

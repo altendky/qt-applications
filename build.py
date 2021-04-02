@@ -1002,12 +1002,13 @@ def build(configuration: Configuration):
     destinations.create_directories()
 
     checkpoint('Select Applications')
+
+    def exclude_webengine_filter(path):
+        return 'webengine' in fspath(path).casefold() and path.suffix not in ('.qm', '.cmake')
+
     applications = filtered_applications(
         applications=qt_paths.applications,
-        filter=lambda path: (
-            'webengine' in fspath(path).casefold()
-            and path.suffix != '.qm'
-        ),
+        filter=exclude_webengine_filter,
     )
 
     checkpoint('Define Plugins')

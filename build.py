@@ -488,7 +488,7 @@ def darwin_dot_app_copy_actions(
         lib_path: pathlib.Path,
 ) -> typing.Set[FileCopyAction]:
     actions = {
-        FileCopyAction.from_tree_path(
+        *FileCopyAction.from_tree_path(
             source=source_path,
             root=reference_path,
         ),
@@ -545,7 +545,8 @@ class DarwinDotApp:
         applications = []
 
         for path in directory.iterdir():
-            if not path.is_file() or path.suffix != '.app':
+            if not path.is_dir() or path.suffix != '.app':
+                print('skipping: {}'.format(path))
                 continue
 
             try:
@@ -555,8 +556,10 @@ class DarwinDotApp:
                     lib_path=lib_path,
                 )
             except DependencyCollectionError:
+                print('failed: {}'.format(path))
                 continue
 
+            print('including: {}'.format(path))
             applications.append(application)
 
         return applications
@@ -980,14 +983,6 @@ def build(configuration: Configuration):
     checkpoint('Install Qt')
     install_qt(configuration=configuration)
 
-    # application_filter = {
-    #     'win32': lambda path: path.suffix == '.exe',
-    #     'linux': lambda path: path.suffix == '',
-    #     # TODO: darwin  the .app is for directories but it still grabs files but not designer...
-    #     # 'darwin': lambda path: path.suffix == '.app',
-    #     'darwin': lambda path: path.suffix == '',
-    # }[configuration.platform]
-
     checkpoint('Define Paths')
     qt_paths = QtPaths.build(
         base=configuration.qt_path,
@@ -1226,7 +1221,7 @@ def write_application_dict(
 
         for application in sorted(applications, key=lambda a: a.path_name):
             f.write('    {stem!r}: {name!r},\n'.format(
-                stem=application.original_path.stem,
+                stem=application.original_path.stem.lower(),
                 name=application.original_path.name,
             ))
 

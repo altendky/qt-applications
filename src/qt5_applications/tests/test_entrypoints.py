@@ -24,7 +24,7 @@ def add_to_env_var_path_list(environment, name, before, after):
 def create_environment(reference):
     environment = dict(reference)
 
-    if sys.platform == 'linux':
+    if sys.platform in ['linux', 'darwin']:
         environment.update(add_to_env_var_path_list(
             environment=environment,
             name='LD_LIBRARY_PATH',

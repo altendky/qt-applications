@@ -724,7 +724,7 @@ class Configuration:
         if platform == 'linux':
             qt_compiler = 'gcc_64'
             qt_architecture = 'gcc_64'
-        elif platform == 'macos':
+        elif platform == 'darwin':
             qt_compiler = 'clang_64'
             qt_architecture = 'clang_64'
         elif platform == 'win32':
@@ -1022,12 +1022,11 @@ def build(configuration: Configuration):
             for path in all_plugin_paths
             if not (path.stem.endswith('d') and path.stem[:-1] in stems)
         ]
-    elif configuration.platform == 'linux':
+    else:
         plugin_paths = [
             *qt_paths.plugins.joinpath('platforms').glob('*'),
             *qt_paths.plugins.joinpath('sqldrivers').glob('*'),
         ]
-    # elif configuration.platform == 'darwin':
 
     plugin_type = {
         'linux': LinuxPlugin,

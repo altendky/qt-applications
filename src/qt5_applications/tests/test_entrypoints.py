@@ -43,15 +43,27 @@ def create_environment(reference):
 
 
 def test_designer():
-    with pytest.raises(subprocess.TimeoutExpired):
+    path = fspath(qt5_applications._application_path('designer'))
+    if path.endswith('.app'):
+        cmd = ["open", path]
+
         subprocess.run(
-            [
-                fspath(qt5_applications._application_path('designer')),
-            ],
+            cmd,
             check=True,
             env={**create_environment(os.environ), 'QT_DEBUG_PLUGINS': '1'},
             timeout=10,
         )
+    else:
+        cmd = [path]
+
+        with pytest.raises(subprocess.TimeoutExpired):
+
+            subprocess.run(
+                cmd,
+                check=True,
+                env={**create_environment(os.environ), 'QT_DEBUG_PLUGINS': '1'},
+                timeout=10,
+            )
 
 
 def test_qmlscene():

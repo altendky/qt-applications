@@ -57,7 +57,7 @@ def pad_version(v, segment_count=3):
 #       in some other way?
 qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.1'))
 
-qt5_applications_wrapper_version = versioneer.get_versions()['version']
+qt5_applications_wrapper_version = '2.1'
 qt5_applications_version = '{}.{}'.format(qt_version, qt5_applications_wrapper_version)
 
 

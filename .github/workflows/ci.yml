@@ -20,14 +20,14 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Linux
-            runs-on: ubuntu-latest
-            python_platform: linux
-            container: docker://python:{0}-buster
-          - name: Windows
-            runs-on: windows-latest
-            python_platform: win32
-            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
+#          - name: Linux
+#            runs-on: ubuntu-latest
+#            python_platform: linux
+#            container: docker://python:{0}-buster
+#          - name: Windows
+#            runs-on: windows-latest
+#            python_platform: win32
+#            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
           - name: macOS
             runs-on: macos-latest
             python_platform: darwin
@@ -141,14 +141,14 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - name: Linux
-            runs-on: ubuntu-latest
-            python_platform: linux
-            container: docker://python:{0}-buster
-          - name: Windows
-            runs-on: windows-latest
-            python_platform: win32
-            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
+#          - name: Linux
+#            runs-on: ubuntu-latest
+#            python_platform: linux
+#            container: docker://python:{0}-buster
+#          - name: Windows
+#            runs-on: windows-latest
+#            python_platform: win32
+#            vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
           - name: macOS
             runs-on: macos-latest
             python_platform: darwin

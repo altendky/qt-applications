@@ -58,8 +58,8 @@ def pad_version(v, segment_count=3):
 qt_version = pad_version(os.environ.setdefault('QT_VERSION', '6.0.2'))
 qt_major_version = qt_version.partition('.')[0]
 
-qt5_applications_wrapper_version = versioneer.get_versions()['version']
-qt5_applications_version = '{}.{}'.format(qt_version, qt5_applications_wrapper_version)
+qt_applications_wrapper_version = versioneer.get_versions()['version']
+qt_applications_version = '{}.{}'.format(qt_version, qt_applications_wrapper_version)
 
 
 with open('README.rst') as f:
@@ -109,7 +109,7 @@ setuptools.setup(
     distclass=Dist,
     packages=[package.replace('qt_applications', import_name) for package in setuptools.find_packages('src')],
     package_dir={import_name: 'src/qt_applications'},
-    version=qt5_applications_version,
+    version=qt_applications_version,
     include_package_data=True,
     python_requires=">=3.5",
 )

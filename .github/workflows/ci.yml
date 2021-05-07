@@ -81,11 +81,11 @@ jobs:
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.0
+              env: 5.14.0
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.1
+              env: 5.14.1
             os:
               name: macOS
           - bitness:
@@ -254,11 +254,11 @@ jobs:
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.0
+              env: 5.14.0
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.1
+              env: 5.14.1
             os:
               name: macOS
           - bitness:

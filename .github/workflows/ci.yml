@@ -28,9 +28,9 @@ jobs:
             runs-on: windows-latest
             python_platform: win32
             vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
-#          - name: macOS
-#            runs-on: macos-latest
-#            python_platform: darwin
+          - name: macOS
+            runs-on: macos-latest
+            python_platform: darwin
         python:
           - name: 3.8
             tox: py38
@@ -76,10 +76,18 @@ jobs:
               name: x32
             os:
               name: Linux
-#           - bitness:
-#               name: x32
-#             os:
-#               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: macOS
+          - qt:
+              qt_version: 5.14.0
+            os:
+              name: macOS
+          - qt:
+              qt_version: 5.14.1
+            os:
+              name: macOS
           - bitness:
               name: x32
             os:
@@ -168,9 +176,9 @@ jobs:
             runs-on: windows-latest
             python_platform: win32
             vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
-#          - name: macOS
-#            runs-on: macos-latest
-#            python_platform: darwin
+          - name: macOS
+            runs-on: macos-latest
+            python_platform: darwin
         python:
           - name: 3.5
             tox: py35
@@ -241,10 +249,18 @@ jobs:
               name: x32
             os:
               name: Linux
-#           - bitness:
-#               name: x32
-#             os:
-#               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: macOS
+          - qt:
+              qt_version: 5.14.0
+            os:
+              name: macOS
+          - qt:
+              qt_version: 5.14.1
+            os:
+              name: macOS
           - bitness:
               name: x32
             os:

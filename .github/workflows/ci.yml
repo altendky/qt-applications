@@ -73,6 +73,18 @@ jobs:
             env: 6.0.2
             matrix: 6.0.2
             major: 6
+          - name: 6.0.3
+            env: 6.0.3
+            matrix: 6.0.3
+            major: 6
+          - name: 6.0.4
+            env: 6.0.4
+            matrix: 6.0.4
+            major: 6
+          - name: 6.1.0
+            env: 6.1.0
+            matrix: 6.1.0
+            major: 6
         bitness:
           - name: x32
             action: x86
@@ -255,6 +267,18 @@ jobs:
             matrix: 6.0.2
             major: 6
             tox: qt6
+          - name: 6.0.3
+            env: 6.0.3
+            matrix: 6.0.3
+            major: 6
+          - name: 6.0.4
+            env: 6.0.4
+            matrix: 6.0.4
+            major: 6
+          - name: 6.1.0
+            env: 6.1.0
+            matrix: 6.1.0
+            major: 6
         bitness:
           - name: x32
             action: x86

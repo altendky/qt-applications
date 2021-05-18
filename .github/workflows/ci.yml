@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.qt_version }}-${{ matrix.bitness.name }}
+    name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
     runs-on: ${{ matrix.os.runs-on }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     strategy:
@@ -37,12 +37,54 @@ jobs:
             action: 3.8
             docker: 3.8
         qt:
-          - qt_version: 5.14.0
-          - qt_version: 5.14.1
-          - qt_version: 5.14.2
-          - qt_version: 5.15.0
-          - qt_version: 5.15.1
-          - qt_version: 5.15.2
+          - name: 5.14.0
+            env: 5.14.0
+            matrix: 5.14.0
+            major: 5
+          - name: 5.14.1
+            env: 5.14.1
+            matrix: 5.14.1
+            major: 5
+          - name: 5.14.2
+            env: 5.14.2
+            matrix: 5.14.2
+            major: 5
+          - name: 5.15.0
+            env: 5.15.0
+            matrix: 5.15.0
+            major: 5
+          - name: 5.15.1
+            env: 5.15.1
+            matrix: 5.15.1
+            major: 5
+          - name: 5.15.2
+            env: 5.15.2
+            matrix: 5.15.2
+            major: 5
+          - name: 6.0.0
+            env: 6.0.0
+            matrix: 6.0.0
+            major: 6
+          - name: 6.0.1
+            env: 6.0.1
+            matrix: 6.0.1
+            major: 6
+          - name: 6.0.2
+            env: 6.0.2
+            matrix: 6.0.2
+            major: 6
+          - name: 6.0.3
+            env: 6.0.3
+            matrix: 6.0.3
+            major: 6
+          - name: 6.0.4
+            env: 6.0.4
+            matrix: 6.0.4
+            major: 6
+          - name: 6.1.0
+            env: 6.1.0
+            matrix: 6.1.0
+            major: 6
         bitness:
           - name: x32
             action: x86
@@ -60,15 +102,21 @@ jobs:
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.0
+              matrix: 5.14.0
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.1
+              matrix: 5.14.1
             os:
               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: Windows
+            qt:
+              major: 6
     env:
-      QT_VERSION: ${{ matrix.qt.qt_version }}
+      QT_VERSION: ${{ matrix.qt.env }}
 
     steps:
       - name: Checkout
@@ -124,7 +172,7 @@ jobs:
       - name: Archive individual wheel
         uses: actions/upload-artifact@v1
         with:
-          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.qt_version }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Archive all wheels
         uses: actions/upload-artifact@v1
@@ -132,7 +180,7 @@ jobs:
           name: all_wheels
           path: dist/
   test:
-    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.qt_version }}
+    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
     runs-on: ${{ matrix.os.runs-on }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     needs:
@@ -174,12 +222,66 @@ jobs:
             action: 3.9
             docker: 3.9
         qt:
-          - qt_version: 5.14.0
-          - qt_version: 5.14.1
-          - qt_version: 5.14.2
-          - qt_version: 5.15.0
-          - qt_version: 5.15.1
-          - qt_version: 5.15.2
+          - name: 5.14.0
+            env: 5.14.0
+            matrix: 5.14.0
+            major: 5
+            tox: qt5
+          - name: 5.14.1
+            env: 5.14.1
+            matrix: 5.14.1
+            major: 5
+            tox: qt5
+          - name: 5.14.2
+            env: 5.14.2
+            matrix: 5.14.2
+            major: 5
+            tox: qt5
+          - name: 5.15.0
+            env: 5.15.0
+            matrix: 5.15.0
+            major: 5
+            tox: qt5
+          - name: 5.15.1
+            env: 5.15.1
+            matrix: 5.15.1
+            major: 5
+            tox: qt5
+          - name: 5.15.2
+            env: 5.15.2
+            matrix: 5.15.2
+            major: 5
+            tox: qt5
+          - name: 6.0.0
+            env: 6.0.0
+            matrix: 6.0.0
+            major: 6
+            tox: qt6
+          - name: 6.0.1
+            env: 6.0.1
+            matrix: 6.0.1
+            major: 6
+            tox: qt6
+          - name: 6.0.2
+            env: 6.0.2
+            matrix: 6.0.2
+            major: 6
+            tox: qt6
+          - name: 6.0.3
+            env: 6.0.3
+            matrix: 6.0.3
+            major: 6
+            tox: qt6
+          - name: 6.0.4
+            env: 6.0.4
+            matrix: 6.0.4
+            major: 6
+            tox: qt6
+          - name: 6.1.0
+            env: 6.1.0
+            matrix: 6.1.0
+            major: 6
+            tox: qt6
         bitness:
           - name: x32
             action: x86
@@ -197,15 +299,21 @@ jobs:
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.0
+              matrix: 5.14.0
             os:
               name: macOS
           - qt:
-              qt_version: 5.14.1
+              matrix: 5.14.1
             os:
               name: macOS
+          - bitness:
+              name: x32
+            os:
+              name: Windows
+            qt:
+              major: 6
     env:
-      QT_VERSION: ${{ matrix.qt.qt_version }}
+      QT_VERSION: ${{ matrix.qt.env }}
 
     steps:
       - name: Checkout
@@ -213,7 +321,7 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v1
         with:
-          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.qt_version }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
@@ -257,7 +365,7 @@ jobs:
       - uses: altendky/QTBUG-88688-libxcb-util@v3
       - name: Test
         run: |
-          tox -e ${{ matrix.python.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
+          tox -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
   maybe_publish:
     name: Maybe Publish
     runs-on: ubuntu-latest

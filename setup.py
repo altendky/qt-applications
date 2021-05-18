@@ -55,10 +55,11 @@ def pad_version(v, segment_count=3):
 
 # TODO: really doesn't seem quite proper here and probably should come
 #       in some other way?
-qt_version = pad_version(os.environ.setdefault('QT_VERSION', '5.15.1'))
+qt_version = pad_version(os.environ.setdefault('QT_VERSION', '6.1.0'))
+qt_major_version = qt_version.partition('.')[0]
 
-qt5_applications_wrapper_version = versioneer.get_versions()['version']
-qt5_applications_version = '{}.{}'.format(qt_version, qt5_applications_wrapper_version)
+qt_applications_wrapper_version = versioneer.get_versions()['version']
+qt_applications_version = '{}.{}'.format(qt_version, qt_applications_wrapper_version)
 
 
 with open('README.rst') as f:
@@ -73,8 +74,12 @@ class Dist(setuptools.Distribution):
         return True
 
 
+distribution_name = "qt{}-applications".format(qt_major_version)
+import_name = distribution_name.replace('-', '_')
+
+
 setuptools.setup(
-    name="qt5-applications",
+    name=distribution_name,
     description="The collection of Qt tools easily installable in Python",
     long_description=readme,
     long_description_content_type='text/x-rst',
@@ -102,9 +107,9 @@ setuptools.setup(
     ],
     cmdclass={'bdist_wheel': BdistWheel, 'build_py': build.BuildPy},
     distclass=Dist,
-    packages=setuptools.find_packages('src'),
-    package_dir={'': 'src'},
-    version=qt5_applications_version,
+    packages=[package.replace('qt_applications', import_name) for package in setuptools.find_packages('src')],
+    package_dir={import_name: 'src/qt_applications'},
+    version=qt_applications_version,
     include_package_data=True,
     python_requires=">=3.5",
 )

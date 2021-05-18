@@ -212,13 +212,19 @@ def create_script_function_name(path: pathlib.Path):
 def linuxdeployqt_substitute_list_source(
         target,
 ) -> typing.List[pathlib.Path]:
-    paths = [
-        dependency.path
-        for dependency in lddwrap.list_dependencies(
-            path=target,
-        )
-        if dependency.path is not None
-    ]
+    try:
+        paths = [
+            dependency.path
+            for dependency in lddwrap.list_dependencies(
+                path=target,
+            )
+            if dependency.path is not None
+        ]
+    except RuntimeError as e:
+        if "Failed to ldd external" not in str(e):
+            raise
+
+        paths = []
 
     return paths
 
@@ -959,7 +965,7 @@ def main(package_path, build_base_path):
     # TODO: uhhh....  i'm trying to use an existing directory i thought
     build_base_path.mkdir(parents=True, exist_ok=True)
     build_path = tempfile.mkdtemp(
-        prefix='qt5_applications-',
+        prefix='qt_applications-',
         dir=fspath(build_base_path),
     )
     print('after ---!!!', file=sys.stderr)
@@ -1187,7 +1193,7 @@ def windeployqt_list_source(
         for line in process.stdout.decode('utf-8').splitlines()
     ]
 
-    return paths
+    return [path for path in paths if path.name != "qt_en.qm"]
 
 
 def install_qt(configuration):

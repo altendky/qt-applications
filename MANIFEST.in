@@ -1,3 +1,3 @@
-recursive-include src/qt5_applications *
+recursive-include src/qt_applications *
 include versioneer.py
-include src/qt5_applications/_version.py
+include src/qt_applications/_version.py

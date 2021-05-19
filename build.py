@@ -1073,6 +1073,12 @@ def build(configuration: Configuration):
             action.linux_less_specific_so_target()
             for action in copy_actions
         }
+    elif configuration.platform == 'darwin':
+        copy_actions = {
+            action
+            for action in copy_actions
+            if action.destination.suffix != '.a'
+        }
 
     checkpoint('Write Applications dict')
     applications_py = destinations.package / '_applications.py'

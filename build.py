@@ -610,7 +610,7 @@ class QtPaths:
                 tuple(int(s) for s in version.split('.')) >= (6, 1, 2)
                 and platform_ == 'darwin'
         ):
-            bin_path = compiler_path / 'macos' / 'bin'
+            bin_path = base / version / 'macos' / 'bin'
         else:
             bin_path = compiler_path / 'bin'
 

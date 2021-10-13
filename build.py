@@ -604,7 +604,14 @@ class QtPaths:
             compiler,
             platform_,
     ):
-        compiler_path = base / version / compiler
+        if (
+                tuple(int(s) for s in version.split('.')) >= (6, 1, 2)
+                and platform_ == 'darwin'
+        ):
+            compiler_path = base / version / 'macos'
+        else:
+            compiler_path = base / version / compiler
+
         bin_path = compiler_path / 'bin'
         lib_path = compiler_path / 'lib'
         translation_path = compiler_path / 'translations'

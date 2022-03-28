@@ -43,9 +43,9 @@ jobs:
             matrix: 5.14.2
             major: 5
             tox: qt5
-          - name: 5.15.3
-            env: 5.15.3
-            matrix: 5.15.3
+          - name: 5.15.2
+            env: 5.15.2
+            matrix: 5.15.2
             major: 5
             tox: qt5
           - name: 6.0.4
@@ -206,9 +206,9 @@ jobs:
             matrix: 5.14.2
             major: 5
             tox: qt5
-          - name: 5.15.3
-            env: 5.15.3
-            matrix: 5.15.3
+          - name: 5.15.2
+            env: 5.15.2
+            matrix: 5.15.2
             major: 5
             tox: qt5
           - name: 6.0.4

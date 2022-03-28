@@ -200,6 +200,10 @@ jobs:
             tox: py39
             action: 3.9
             docker: 3.9
+          - name: '3.10'
+            tox: py310
+            action: '3.10'
+            docker: '3.10'
         qt:
           - name: 5.14.2
             env: 5.14.2

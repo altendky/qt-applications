@@ -78,7 +78,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.action }}
           architecture: ${{ matrix.bitness.action }}
@@ -126,12 +126,12 @@ jobs:
           retagged = wheel.parent / wheel.name.replace('linux', 'manylinux2014')
           wheel.rename(retagged)
       - name: Archive individual wheel
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Archive all wheels
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: all_wheels
           path: dist/
@@ -212,13 +212,13 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.action }}
           architecture: ${{ matrix.bitness.action }}
@@ -271,7 +271,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download all wheels
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: all_wheels
           path: dist/

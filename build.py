@@ -186,7 +186,10 @@ class FileCopyAction:
         destination = destination_root / self.destination
         destination.parent.mkdir(parents=True, exist_ok=True)
 
-        shutil.copy(src=fspath(self.source), dst=fspath(destination))
+        src = fspath(self.source)
+        dst = fspath(destination)
+        print(f"copying:\n    {src}\n    {dst}")
+        shutil.copy(src=src, dst=dst)
 
 
 # @attr.s(frozen=True)

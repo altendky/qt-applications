@@ -89,6 +89,7 @@ jobs:
       - name: Report info
         shell: bash
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git show --quiet HEAD
           python --version --version
           pip --version
@@ -228,6 +229,7 @@ jobs:
       - name: Report info
         shell: bash
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git show --quiet HEAD
           python --version --version
           pip --version

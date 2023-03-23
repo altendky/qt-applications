@@ -1137,9 +1137,9 @@ def build(configuration: Configuration):
                 try:
                     action.copy(destination_root=reference)
                 except OSError as e:
+                    print('attempt ({}/{}): {}: {}'.format(attempt + 1, retries + 1, type(e).__name__, str(e)))
                     if attempt >= retries:
                         raise
-                    print('attempt ({}/{}): {}: {}'.format(attempt, retries + 1, type(e).__name__, str(e)))
                 else:
                     break
 

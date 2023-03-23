@@ -1132,7 +1132,16 @@ def build(configuration: Configuration):
     checkpoint('Execute Copy Actions')
     for reference, actions in all_copy_actions.items():
         for action in actions:
-            action.copy(destination_root=reference)
+            retries = 4
+            for attempt in itertools.count():
+                try:
+                    action.copy(destination_root=reference)
+                except OSError as e:
+                    if attempt >= retries:
+                        raise
+                    print('attempt ({}/{}): {}: {}'.format(attempt, retries + 1, type(e).__name__, str(e)))
+                else:
+                    break
 
 
 def filtered_relative_to(

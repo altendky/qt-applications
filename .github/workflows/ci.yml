@@ -43,10 +43,12 @@ jobs:
             env: 5.15.2
             matrix: 5.15.2
             major: 5
+            tox: qt5
           - name: 6.5.0
             env: 6.5.0
             matrix: 6.5.0
             major: 6
+            tox: qt6
         bitness:
           - name: x32
             action: x86
@@ -178,10 +180,12 @@ jobs:
             env: 5.15.2
             matrix: 5.15.2
             major: 5
+            tox: qt5
           - name: 6.5.0
             env: 6.5.0
             matrix: 6.5.0
             major: 6
+            tox: qt6
         bitness:
           - name: x32
             action: x86

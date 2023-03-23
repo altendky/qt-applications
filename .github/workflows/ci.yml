@@ -210,6 +210,7 @@ jobs:
             qt:
               major: 6
     env:
+      MACOSX_DEPLOYMENT_TARGET: '10.14'
       QT_VERSION: ${{ matrix.qt.env }}
 
     steps:

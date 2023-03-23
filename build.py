@@ -1223,7 +1223,7 @@ def windeployqt_list_source(
         for line in process.stdout.decode('utf-8').splitlines()
     ]
 
-    return [path for path in paths if path.name != "qt_en.qm"]
+    return [path for path in paths if path.name != "qt_en.qm" and not path.is_dir()]
 
 
 def install_qt(configuration):

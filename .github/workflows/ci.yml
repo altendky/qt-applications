@@ -267,7 +267,7 @@ jobs:
         run: |
           python -m venv piptestenv
           piptestenv/bin/pip install --upgrade pip
-          piptestenv/bin/pip install -vvv ${{ env['WHEEL_PATH'] }}
+          piptestenv/bin/pip install -vvv --find-links dist/ ${{ matrix.qt.tox }}-applications
       - name: Test
         run: |
           tox -vvvvv -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}

@@ -9,8 +9,9 @@ on:
       - v*
   pull_request:
 
-env:
-  PIP_NO_PYTHON_VERSION_WARNING: 1
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name != 'pull_request' && github.sha || '' }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -34,7 +35,7 @@ jobs:
             python_platform: darwin
         python:
           - name: '3.10'
-            tox: py38
+            tox: py310
             action: '3.10'
             docker: '3.10'
         qt:
@@ -72,7 +73,7 @@ jobs:
       QT_VERSION: ${{ matrix.qt.env }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
@@ -206,7 +207,7 @@ jobs:
       QT_VERSION: ${{ matrix.qt.env }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download
@@ -264,7 +265,7 @@ jobs:
     needs:
       - test
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download all wheels

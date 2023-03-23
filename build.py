@@ -139,7 +139,7 @@ class FileCopyAction:
     def __attrs_post_init__(self):
         print(f"created FileCopyAction: {self}")
         if self.source.is_dir():
-            traceback.print_stack()
+            traceback.print_stack(file=sys.stdout)
 
     @classmethod
     def from_path(

@@ -270,7 +270,7 @@ jobs:
           piptestenv/bin/pip install -vvv ${{ env['WHEEL_PATH'] }}
       - name: Test
         run: |
-          tox -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
+          tox -vvvvv -e ${{ matrix.python.tox }}-${{ matrix.qt.tox }} --installpkg ${{ env['WHEEL_PATH'] }}
   maybe_publish:
     name: Maybe Publish
     runs-on: ubuntu-latest

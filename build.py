@@ -136,6 +136,11 @@ class FileCopyAction:
     source = attr.ib()
     destination = attr.ib() # including file name, relative
 
+    def __attrs_post_init__(self):
+        print(f"created FileCopyAction: {self}")
+        if self.source.is_dir():
+            traceback.print_stack()
+
     @classmethod
     def from_path(
             cls: typing.Type[T],

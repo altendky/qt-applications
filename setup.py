@@ -114,7 +114,7 @@ setuptools.setup(
         'Topic :: Software Development',
         'Topic :: Utilities',
     ],
-    cmdclass={'bdist_wheel': BdistWheel, 'build_py': build.BuildPy},
+    cmdclass={'bdist_wheel': BdistWheel, 'build_py': _build.BuildPy},
     distclass=Dist,
     packages=[package.replace('qt_applications', import_name) for package in setuptools.find_packages('src')],
     package_dir={import_name: 'src/qt_applications'},

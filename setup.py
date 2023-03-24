@@ -44,11 +44,11 @@ else:
             if sys.platform == 'linux':
                 plat = 'manylinux_2_17_x86_64'
             elif sys.platform == 'darwin':
-                if qt_major_version == 5:
+                if qt_major_version == '5':
                     plat = 'macosx_10_14_x86_64'
-                elif qt_major_version == 6:
+                elif qt_major_version == '6':
                     plat = 'macosx_10_14_universal2'
-            elif sys.platform == 'win':
+            elif sys.platform == 'win32':
                 plat = 'win_amd64'
             return python, abi, plat
 

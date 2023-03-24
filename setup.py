@@ -10,9 +10,9 @@ fspath = getattr(os, 'fspath', str)
 
 
 sys.path.insert(0, fspath(here))
-# TODO: yuck, put the build command in a separate project and
-#       build-requires it?
-import build
+# TODO: yuck, put the _build command in a separate project and
+#       _build-requires it?
+import _build
 sys.path.pop(0)
 
 import setuptools

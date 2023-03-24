@@ -38,9 +38,18 @@ else:
             self.root_is_pure = False
 
         def get_tag(self):
-            python, abi, plat = super().get_tag()
+            python, abi, _ = super().get_tag()
             python = 'py3'
             abi = 'none'
+            if sys.platform == 'linux':
+                plat = 'manylinux_2_17_x86_64'
+            elif sys.platform == 'darwin':
+                if qt_major_version == 5:
+                    plat = 'macosx_10_14_x86_64'
+                elif qt_major_version == 6:
+                    plat = 'macosx_10_14_universal2'
+            elif sys.platform == 'win':
+                plat = 'win_amd64'
             return python, abi, plat
 
 

@@ -87,7 +87,7 @@ jobs:
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools
-          pip install 'tox<4'
+          pip install 'tox<4' build
       - name: Report info
         shell: bash
         run: |
@@ -115,19 +115,7 @@ jobs:
         # native shell for nmake...  keep commands here simple i guess
         run: |
           mkdir -p dist/
-          pip wheel -vvv --no-deps --wheel-dir dist/ --no-clean .
-      - name: Rename to manylinux2014 tag
-        if: matrix.os.python_platform == 'linux'
-        shell: python
-        run: |
-          import pathlib
-
-          dist = pathlib.Path.cwd() / 'dist'
-          [wheel] = dist.glob('*.whl')
-
-          # this is cheap...
-          retagged = wheel.parent / wheel.name.replace('linux', 'manylinux2014')
-          wheel.rename(retagged)
+          python -m build --wheel --outdir dist/ .
       - name: Archive individual wheel
         uses: actions/upload-artifact@v3
         with:
@@ -210,7 +198,6 @@ jobs:
             qt:
               major: 6
     env:
-      MACOSX_DEPLOYMENT_TARGET: '10.14'
       QT_VERSION: ${{ matrix.qt.env }}
 
     steps:

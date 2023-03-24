@@ -49,7 +49,10 @@ else:
                 elif qt_major_version == '6':
                     plat = 'macosx_10_14_universal2'
             elif sys.platform == 'win32':
-                plat = 'win_amd64'
+                if sys.maxsize <= 2**32:
+                    plat = 'win32'
+                else:
+                    plat = 'win_amd64'
             return python, abi, plat
 
 

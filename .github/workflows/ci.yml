@@ -49,11 +49,6 @@ jobs:
             matrix: 6.3.2
             major: 6
             tox: qt6
-          - name: 6.4.2
-            env: 6.4.2
-            matrix: 6.4.2
-            major: 6
-            tox: qt6
           - name: 6.4.3
             env: 6.4.3
             matrix: 6.4.3
@@ -192,11 +187,6 @@ jobs:
           - name: 6.3.2
             env: 6.3.2
             matrix: 6.3.2
-            major: 6
-            tox: qt6
-          - name: 6.4.2
-            env: 6.4.2
-            matrix: 6.4.2
             major: 6
             tox: qt6
           - name: 6.4.3

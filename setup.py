@@ -123,5 +123,5 @@ setuptools.setup(
     package_dir={import_name: 'src/qt_applications'},
     version=qt_applications_version,
     include_package_data=True,
-    python_requires=">=3.5",
+    python_requires=">=3.8",
 )

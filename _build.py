@@ -1226,15 +1226,15 @@ def install_qt(configuration):
         command=[
             sys.executable,
             '-m', 'aqt',
-            'install',
+            'install-qt',
             '--outputdir', configuration.qt_path.resolve(),
-            configuration.qt_version,
             {
                 'linux': 'linux',
                 'win32': 'windows',
                 'darwin': 'mac',
             }[configuration.platform],
             'desktop',
+            configuration.qt_version,
             configuration.architecture,
         ],
     )

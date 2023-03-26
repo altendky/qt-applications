@@ -43,9 +43,13 @@ def create_environment(reference):
     environment = dict(reference)
 
     if sys.platform in ['linux', 'darwin']:
+        if sys.platform == 'linux':
+            variable = 'LD_LIBRARY_PATH'
+        else:
+            variable = 'DYLD_LIBRARY_PATH'
         environment.update(add_to_env_var_path_list(
             environment=environment,
-            name='LD_LIBRARY_PATH',
+            name=variable,
             before=[''],
             after=[sysconfig.get_config_var('LIBDIR')],
         ))

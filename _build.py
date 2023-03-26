@@ -1022,6 +1022,11 @@ def build(configuration: Configuration):
         filter=exclude_webengine_filter,
     )
 
+    print(" ---- start all applications:")
+    for application in applications:
+        print(application.path_name)
+    print(" ---- end all applications:")
+
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
         all_plugin_paths = [

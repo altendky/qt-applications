@@ -1216,6 +1216,8 @@ def windeployqt_list_source(
             # `rcc.exe`, which we still want to include.
             return []
 
+        raise DependencyCollectionError(target) from e
+
     paths = [
         pathlib.Path(line)
         # re: .decode...  ugh, 3.5

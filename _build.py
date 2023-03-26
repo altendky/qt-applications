@@ -1206,11 +1206,15 @@ def windeployqt_list_source(
                 target,
             ],
             stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             # ugh, 3.5
             # encoding='utf-8',
         )
     except subprocess.CalledProcessError as e:
-        raise DependencyCollectionError(target) from e
+        if 'does not seem to be a Qt executable' in e.stderr.decode('utf-8'):
+            # This can happen with some utilities like
+            # `rcc.exe`, which we still want to include.
+            return []
 
     paths = [
         pathlib.Path(line)

@@ -158,6 +158,10 @@ jobs:
             runs-on: macos-latest
             python_platform: darwin
         python:
+          - name: '3.7'
+            tox: py37
+            action: '3.7'
+            docker: '3.7'
           - name: '3.8'
             tox: py38
             action: '3.8'
@@ -180,6 +184,11 @@ jobs:
             matrix: 5.15.2
             major: 5
             tox: qt5
+          - name: 6.3.2
+            env: 6.3.2
+            matrix: 6.3.2
+            major: 6
+            tox: qt6
           - name: 6.4.2
             env: 6.4.2
             matrix: 6.4.2

@@ -77,6 +77,16 @@ qt_applications_version = '{}.{}'.format(qt_version, qt_applications_wrapper_ver
 with open('README.rst') as f:
     readme = f.read()
 
+if qt_major_version == '5':
+    replacements = [
+        ["qt6", "qt5"],
+        ["Qt6", "Qt5"],
+        ["Qt6", "Qt 5"],
+        ["6.4", "5.15"],
+    ]
+    for a, b in replacements:
+        readme = readme.replace(a, b)
+
 
 class Dist(setuptools.Distribution):
     def has_ext_modules(self):

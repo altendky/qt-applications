@@ -77,7 +77,8 @@ qt_applications_version = '{}.{}'.format(qt_version, qt_applications_wrapper_ver
 with open('README.rst') as f:
     readme = f.read()
 
-readme = readme.replace("qt6", f"qt{qt_major_version}")
+if qt_major_version == '5':
+    readme = readme.replace("qt6", f"qt5").replace("6.4", "5.15")
 
 
 class Dist(setuptools.Distribution):

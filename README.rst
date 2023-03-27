@@ -11,11 +11,11 @@ applications to avoid repeating the same large files in several packages for
 different Python versions.  These files are not intended to be used directly.
 
 
-.. |PyPI| image:: https://img.shields.io/pypi/v/qt5-applications.svg
+.. |PyPI| image:: https://img.shields.io/pypi/v/qt6-applications.svg
    :alt: PyPI version
    :target: https://pypi.org/project/qt6-applications/
 
-.. |Pythons| image:: https://img.shields.io/pypi/pyversions/qt5-applications.svg
+.. |Pythons| image:: https://img.shields.io/pypi/pyversions/qt6-applications.svg
    :alt: supported Python versions
    :target: https://pypi.org/project/qt6-applications/
 

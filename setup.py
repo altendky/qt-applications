@@ -10,9 +10,9 @@ fspath = getattr(os, 'fspath', str)
 
 
 sys.path.insert(0, fspath(here))
-# TODO: yuck, put the build command in a separate project and
-#       build-requires it?
-import build
+# TODO: yuck, put the _build command in a separate project and
+#       _build-requires it?
+import _build
 sys.path.pop(0)
 
 import setuptools
@@ -38,9 +38,21 @@ else:
             self.root_is_pure = False
 
         def get_tag(self):
-            python, abi, plat = super().get_tag()
+            python, abi, _ = super().get_tag()
             python = 'py3'
             abi = 'none'
+            if sys.platform == 'linux':
+                plat = 'manylinux_2_17_x86_64'
+            elif sys.platform == 'darwin':
+                if qt_major_version == '5':
+                    plat = 'macosx_10_14_x86_64'
+                elif qt_major_version == '6':
+                    plat = 'macosx_10_14_universal2'
+            elif sys.platform == 'win32':
+                if sys.maxsize <= 2**32:
+                    plat = 'win32'
+                else:
+                    plat = 'win_amd64'
             return python, abi, plat
 
 
@@ -105,11 +117,11 @@ setuptools.setup(
         'Topic :: Software Development',
         'Topic :: Utilities',
     ],
-    cmdclass={'bdist_wheel': BdistWheel, 'build_py': build.BuildPy},
+    cmdclass={'bdist_wheel': BdistWheel, 'build_py': _build.BuildPy},
     distclass=Dist,
     packages=[package.replace('qt_applications', import_name) for package in setuptools.find_packages('src')],
     package_dir={import_name: 'src/qt_applications'},
     version=qt_applications_version,
     include_package_data=True,
-    python_requires=">=3.5",
+    python_requires=">=3.7",
 )

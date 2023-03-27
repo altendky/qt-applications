@@ -186,7 +186,10 @@ class FileCopyAction:
         destination = destination_root / self.destination
         destination.parent.mkdir(parents=True, exist_ok=True)
 
-        shutil.copy(src=fspath(self.source), dst=fspath(destination))
+        src = fspath(self.source)
+        dst = fspath(destination)
+        print(f"copying:\n    {src}\n    {dst}")
+        shutil.copy(src=src, dst=dst)
 
 
 # @attr.s(frozen=True)
@@ -1019,6 +1022,11 @@ def build(configuration: Configuration):
         filter=exclude_webengine_filter,
     )
 
+    print(" ---- start all applications:")
+    for application in applications:
+        print(application.path_name)
+    print(" ---- end all applications:")
+
     checkpoint('Define Plugins')
     if configuration.platform == 'win32':
         all_plugin_paths = [
@@ -1132,7 +1140,16 @@ def build(configuration: Configuration):
     checkpoint('Execute Copy Actions')
     for reference, actions in all_copy_actions.items():
         for action in actions:
-            action.copy(destination_root=reference)
+            retries = 4
+            for attempt in itertools.count():
+                try:
+                    action.copy(destination_root=reference)
+                except OSError as e:
+                    print('attempt ({}/{}): {}: {}'.format(attempt + 1, retries + 1, type(e).__name__, str(e)))
+                    if attempt >= retries:
+                        raise
+                else:
+                    break
 
 
 def filtered_relative_to(
@@ -1204,13 +1221,15 @@ def windeployqt_list_source(
             # `rcc.exe`, which we still want to include.
             return []
 
+        raise DependencyCollectionError(target) from e
+
     paths = [
         pathlib.Path(line)
         # re: .decode...  ugh, 3.5
         for line in process.stdout.decode('utf-8').splitlines()
     ]
 
-    return [path for path in paths if path.name != "qt_en.qm"]
+    return [path for path in paths if path.name != "qt_en.qm" and not path.is_dir()]
 
 
 def install_qt(configuration):
@@ -1218,15 +1237,15 @@ def install_qt(configuration):
         command=[
             sys.executable,
             '-m', 'aqt',
-            'install',
+            'install-qt',
             '--outputdir', configuration.qt_path.resolve(),
-            configuration.qt_version,
             {
                 'linux': 'linux',
                 'win32': 'windows',
                 'darwin': 'mac',
             }[configuration.platform],
             'desktop',
+            configuration.qt_version,
             configuration.architecture,
         ],
     )

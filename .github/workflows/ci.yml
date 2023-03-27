@@ -9,8 +9,9 @@ on:
       - v*
   pull_request:
 
-env:
-  PIP_NO_PYTHON_VERSION_WARNING: 1
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ github.event_name }}-${{ github.event_name != 'pull_request' && github.sha || '' }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -33,75 +34,31 @@ jobs:
             runs-on: macos-latest
             python_platform: darwin
         python:
-          - name: 3.8
-            tox: py38
-            action: 3.8
-            docker: 3.8
+          - name: '3.10'
+            tox: py310
+            action: '3.10'
+            docker: '3.10'
         qt:
-          - name: 5.14.0
-            env: 5.14.0
-            matrix: 5.14.0
-            major: 5
-          - name: 5.14.1
-            env: 5.14.1
-            matrix: 5.14.1
-            major: 5
-          - name: 5.14.2
-            env: 5.14.2
-            matrix: 5.14.2
-            major: 5
-          - name: 5.15.0
-            env: 5.15.0
-            matrix: 5.15.0
-            major: 5
-          - name: 5.15.1
-            env: 5.15.1
-            matrix: 5.15.1
-            major: 5
           - name: 5.15.2
             env: 5.15.2
             matrix: 5.15.2
             major: 5
-          - name: 6.0.0
-            env: 6.0.0
-            matrix: 6.0.0
+            tox: qt5
+          - name: 6.3.2
+            env: 6.3.2
+            matrix: 6.3.2
             major: 6
-          - name: 6.0.1
-            env: 6.0.1
-            matrix: 6.0.1
+            tox: qt6
+          - name: 6.4.3
+            env: 6.4.3
+            matrix: 6.4.3
             major: 6
-          - name: 6.0.2
-            env: 6.0.2
-            matrix: 6.0.2
+            tox: qt6
+          - name: 6.5.0
+            env: 6.5.0
+            matrix: 6.5.0
             major: 6
-          - name: 6.0.3
-            env: 6.0.3
-            matrix: 6.0.3
-            major: 6
-          - name: 6.0.4
-            env: 6.0.4
-            matrix: 6.0.4
-            major: 6
-          - name: 6.1.0
-            env: 6.1.0
-            matrix: 6.1.0
-            major: 6
-          - name: 6.1.1
-            env: 6.1.1
-            matrix: 6.1.1
-            major: 6
-          - name: 6.1.2
-            env: 6.1.2
-            matrix: 6.1.2
-            major: 6
-          - name: 6.1.3
-            env: 6.1.3
-            matrix: 6.1.3
-            major: 6
-          - name: 6.2.0
-            env: 6.2.0
-            matrix: 6.2.0
-            major: 6
+            tox: qt6
         bitness:
           - name: x32
             action: x86
@@ -118,14 +75,6 @@ jobs:
               name: x32
             os:
               name: macOS
-          - qt:
-              matrix: 5.14.0
-            os:
-              name: macOS
-          - qt:
-              matrix: 5.14.1
-            os:
-              name: macOS
           - bitness:
               name: x32
             os:
@@ -136,28 +85,30 @@ jobs:
       QT_VERSION: ${{ matrix.qt.env }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.action }}
           architecture: ${{ matrix.bitness.action }}
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools
-          pip install tox
+          pip install 'tox<4' build
       - name: Report info
         shell: bash
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git show --quiet HEAD
           python --version --version
           pip --version
           pip list
           pip freeze --all
           python -c "import sysconfig; print('Py_ENABLE_SHARED -> {}'.format(sysconfig.get_config_var('Py_ENABLE_SHARED')))"
+          python -c 'import sys; print("sys.maxsize:", sys.maxsize, sys.maxsize > 2**32)'
       - name: Install Linux build dependencies
         if: matrix.os.python_platform == 'linux'
         run: |
@@ -174,26 +125,14 @@ jobs:
         # native shell for nmake...  keep commands here simple i guess
         run: |
           mkdir -p dist/
-          pip wheel -vvv --no-deps --wheel-dir dist/ --no-clean .
-      - name: Rename to manylinux2014 tag
-        if: matrix.os.python_platform == 'linux'
-        shell: python
-        run: |
-          import pathlib
-
-          dist = pathlib.Path.cwd() / 'dist'
-          [wheel] = dist.glob('*.whl')
-
-          # this is cheap...
-          retagged = wheel.parent / wheel.name.replace('linux', 'manylinux2014')
-          wheel.rename(retagged)
+          python -m build --wheel --outdir dist/ .
       - name: Archive individual wheel
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Archive all wheels
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: all_wheels
           path: dist/
@@ -219,103 +158,47 @@ jobs:
             runs-on: macos-latest
             python_platform: darwin
         python:
-          - name: 3.5
-            tox: py35
-            action: 3.5
-            docker: 3.5
-          - name: 3.6
-            tox: py36
-            action: 3.6
-            docker: 3.6
-          - name: 3.7
+          - name: '3.7'
             tox: py37
-            action: 3.7
-            docker: 3.7
-          - name: 3.8
+            action: '3.7'
+            docker: '3.7'
+          - name: '3.8'
             tox: py38
-            action: 3.8
-            docker: 3.8
-          - name: 3.9
+            action: '3.8'
+            docker: '3.8'
+          - name: '3.9'
             tox: py39
-            action: 3.9
-            docker: 3.9
+            action: '3.9'
+            docker: '3.9'
+          - name: '3.10'
+            tox: py310
+            action: '3.10'
+            docker: '3.10'
+          - name: '3.11'
+            tox: py311
+            action: '3.11'
+            docker: '3.11'
         qt:
-          - name: 5.14.0
-            env: 5.14.0
-            matrix: 5.14.0
-            major: 5
-            tox: qt5
-          - name: 5.14.1
-            env: 5.14.1
-            matrix: 5.14.1
-            major: 5
-            tox: qt5
-          - name: 5.14.2
-            env: 5.14.2
-            matrix: 5.14.2
-            major: 5
-            tox: qt5
-          - name: 5.15.0
-            env: 5.15.0
-            matrix: 5.15.0
-            major: 5
-            tox: qt5
-          - name: 5.15.1
-            env: 5.15.1
-            matrix: 5.15.1
-            major: 5
-            tox: qt5
           - name: 5.15.2
             env: 5.15.2
             matrix: 5.15.2
             major: 5
             tox: qt5
-          - name: 6.0.0
-            env: 6.0.0
-            matrix: 6.0.0
+          - name: 6.3.2
+            env: 6.3.2
+            matrix: 6.3.2
             major: 6
             tox: qt6
-          - name: 6.0.1
-            env: 6.0.1
-            matrix: 6.0.1
+          - name: 6.4.3
+            env: 6.4.3
+            matrix: 6.4.3
             major: 6
             tox: qt6
-          - name: 6.0.2
-            env: 6.0.2
-            matrix: 6.0.2
+          - name: 6.5.0
+            env: 6.5.0
+            matrix: 6.5.0
             major: 6
             tox: qt6
-          - name: 6.0.3
-            env: 6.0.3
-            matrix: 6.0.3
-            major: 6
-            tox: qt6
-          - name: 6.0.4
-            env: 6.0.4
-            matrix: 6.0.4
-            major: 6
-            tox: qt6
-          - name: 6.1.0
-            env: 6.1.0
-            matrix: 6.1.0
-            major: 6
-            tox: qt6
-          - name: 6.1.1
-            env: 6.1.1
-            matrix: 6.1.1
-            major: 6
-          - name: 6.1.2
-            env: 6.1.2
-            matrix: 6.1.2
-            major: 6
-          - name: 6.1.3
-            env: 6.1.3
-            matrix: 6.1.3
-            major: 6
-          - name: 6.2.0
-            env: 6.2.0
-            matrix: 6.2.0
-            major: 6
         bitness:
           - name: x32
             action: x86
@@ -332,14 +215,6 @@ jobs:
               name: x32
             os:
               name: macOS
-          - qt:
-              matrix: 5.14.0
-            os:
-              name: macOS
-          - qt:
-              matrix: 5.14.1
-            os:
-              name: macOS
           - bitness:
               name: x32
             os:
@@ -350,33 +225,35 @@ jobs:
       QT_VERSION: ${{ matrix.qt.env }}
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.action }}
           architecture: ${{ matrix.bitness.action }}
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools
-          pip install tox
+          pip install 'tox<4'
       - name: Report info
         shell: bash
         run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
           git show --quiet HEAD
           python --version --version
           pip --version
           pip list
           pip freeze --all
           python -c "import sysconfig; print('Py_ENABLE_SHARED -> {}'.format(sysconfig.get_config_var('Py_ENABLE_SHARED')))"
+          python -c 'import sys; print("sys.maxsize:", sys.maxsize, sys.maxsize > 2**32)'
       - name: Set WHEEL_PATH
         shell: python
         run: |
@@ -395,7 +272,7 @@ jobs:
         if: matrix.os.python_platform == 'linux'
         run: |
           apt-get update --yes
-          apt-get install --yes libgl1-mesa-dev libdbus-1-3 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 xvfb x11-utils
+          apt-get install --yes libgl1-mesa-dev libdbus-1-3 libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-xinerama0 libxcb-xfixes0 xvfb x11-utils
           # add back: libxcb-util0
       - uses: altendky/QTBUG-88688-libxcb-util@v3
       - name: Test
@@ -404,15 +281,15 @@ jobs:
   maybe_publish:
     name: Maybe Publish
     runs-on: ubuntu-latest
-    container: docker://python:3.8-buster
+    container: docker://python:3.10-buster
     needs:
       - test
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download all wheels
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: all_wheels
           path: dist/

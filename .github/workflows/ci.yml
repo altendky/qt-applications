@@ -66,6 +66,10 @@ jobs:
             action: x64
             ilammy: x64
         exclude:
+          - qt:
+              major: 5
+            arch:
+              matrix: arm
           - arch:
               matrix: arm
             os:
@@ -229,6 +233,10 @@ jobs:
               name: 3.10
             os:
               name: macOS
+            arch:
+              matrix: arm
+          - qt:
+              major: 5
             arch:
               matrix: arm
 #          - bitness:

@@ -186,6 +186,18 @@ jobs:
             action: x64
             ilammy: x64
         exclude:
+          # fails on macos arm runners since they don't provide builds < 3.11
+          # Error: dyld[3131]: Library not loaded: /usr/local/opt/gettext/lib/libintl.8.dylib
+          - python:
+              name: 3.9
+            os:
+              name: macOS
+          # fails on macos arm runners since they don't provide builds < 3.11
+          # Error: dyld[3131]: Library not loaded: /usr/local/opt/gettext/lib/libintl.8.dylib
+          - python:
+              name: 3.10
+            os:
+              name: macOS
           - bitness:
               name: x32
             os:

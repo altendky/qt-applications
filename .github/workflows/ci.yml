@@ -17,7 +17,7 @@ jobs:
   build:
     name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
     runs-on: ${{ matrix.os.runs-on }}
-    container: ${{ format(matrix.os.container, matrix.python.docker) }}
+    container: ${{ format(matrix.os.container, matrix.python.major-dot-minor) }}
     strategy:
       fail-fast: false
       matrix:
@@ -34,29 +34,19 @@ jobs:
             runs-on: macos-latest
             python_platform: darwin
         python:
-          - name: '3.10'
+          - name: '3.12'
             tox: py310
-            action: '3.10'
-            docker: '3.10'
+            action: '3.12'
+            docker: '3.12'
         qt:
           - name: 5.15.2
             env: 5.15.2
             matrix: 5.15.2
             major: 5
             tox: qt5
-          - name: 6.3.2
-            env: 6.3.2
-            matrix: 6.3.2
-            major: 6
-            tox: qt6
-          - name: 6.4.3
-            env: 6.4.3
-            matrix: 6.4.3
-            major: 6
-            tox: qt6
-          - name: 6.5.0
-            env: 6.5.0
-            matrix: 6.5.0
+          - name: 6.5.2
+            env: 6.5.2
+            matrix: 6.5.2
             major: 6
             tox: qt6
         bitness:
@@ -88,11 +78,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
+      - name: Set up Python ${{ matrix.python.major-dot-minor }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python.action }}
+          python-version: ${{ matrix.python.major-dot-minor }}
           architecture: ${{ matrix.bitness.action }}
       - name: pip/setuptools/tox
         run: |
@@ -137,9 +127,9 @@ jobs:
           name: all_wheels
           path: dist/
   test:
-    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
+    name: Test ${{ matrix.os.name }} ${{ matrix.python.major-dot-minor }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
     runs-on: ${{ matrix.os.runs-on }}
-    container: ${{ format(matrix.os.container, matrix.python.docker) }}
+    container: ${{ format(matrix.os.container, matrix.python.major-dot-minor) }}
     needs:
       - build
     strategy:
@@ -158,45 +148,25 @@ jobs:
             runs-on: macos-latest
             python_platform: darwin
         python:
-          - name: '3.7'
-            tox: py37
-            action: '3.7'
-            docker: '3.7'
-          - name: '3.8'
-            tox: py38
-            action: '3.8'
-            docker: '3.8'
-          - name: '3.9'
+          - major-dot-minor: '3.9'
             tox: py39
-            action: '3.9'
-            docker: '3.9'
-          - name: '3.10'
+          - major-dot-minor: '3.10'
             tox: py310
-            action: '3.10'
-            docker: '3.10'
-          - name: '3.11'
+          - major-dot-minor: '3.11'
             tox: py311
-            action: '3.11'
-            docker: '3.11'
+          - major-dot-minor: '3.12'
+            tox: py312
+          - major-dot-minor: '3.13'
+            tox: py313
         qt:
           - name: 5.15.2
             env: 5.15.2
             matrix: 5.15.2
             major: 5
             tox: qt5
-          - name: 6.3.2
-            env: 6.3.2
-            matrix: 6.3.2
-            major: 6
-            tox: qt6
-          - name: 6.4.3
-            env: 6.4.3
-            matrix: 6.4.3
-            major: 6
-            tox: qt6
-          - name: 6.5.0
-            env: 6.5.0
-            matrix: 6.5.0
+          - name: 6.5.2
+            env: 6.5.2
+            matrix: 6.5.2
             major: 6
             tox: qt6
         bitness:
@@ -233,11 +203,11 @@ jobs:
         with:
           name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
           path: dist/
-      - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
+      - name: Set up Python ${{ matrix.python.major-dot-minor }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python.action }}
+          python-version: ${{ matrix.python.major-dot-minor }}
           architecture: ${{ matrix.bitness.action }}
       - name: pip/setuptools/tox
         run: |

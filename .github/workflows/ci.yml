@@ -16,26 +16,30 @@ concurrency:
 jobs:
   build:
     name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
-    runs-on: ${{ matrix.os.runs-on }}
+    runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     strategy:
       fail-fast: false
       matrix:
         os:
           - name: Linux
-            runs-on: ubuntu-latest
+            runs-on:
+              intel: ubuntu-latest
             python_platform: linux
             container: docker://python:{0}-bookworm
           - name: Windows
-            runs-on: windows-latest
+            runs-on:
+              intel: windows-latest
             python_platform: win32
             vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
           - name: macOS
-            runs-on: macos-latest
+            runs-on:
+              arm: macos-latest
+              intel: macos-13
             python_platform: darwin
         python:
           - name: '3.12'
-            tox: py310
+            tox: py312
             action: '3.12'
             docker: '3.12'
         qt:
@@ -49,28 +53,41 @@ jobs:
             matrix: 6.5.2
             major: 6
             tox: qt6
+        arch:
+          - name: Intel
+            matrix: intel
+          - name: ARM
+            matrix: arm
         bitness:
-          - name: x32
-            action: x86
-            ilammy: x86
+#          - name: x32
+#            action: x86
+#            ilammy: x86
           - name: x64
             action: x64
             ilammy: x64
         exclude:
-          - bitness:
-              name: x32
+          - arch:
+              matrix: arm
             os:
               name: Linux
-          - bitness:
-              name: x32
-            os:
-              name: macOS
-          - bitness:
-              name: x32
+          - arch:
+              matrix: arm
             os:
               name: Windows
-            qt:
-              major: 6
+#          - bitness:
+#              name: x32
+#            os:
+#              name: Linux
+#          - bitness:
+#              name: x32
+#            os:
+#              name: macOS
+#          - bitness:
+#              name: x32
+#            os:
+#              name: Windows
+#            qt:
+#              major: 6
     env:
       QT_VERSION: ${{ matrix.qt.env }}
 
@@ -127,7 +144,7 @@ jobs:
           path: dist/
   test:
     name: Test ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
-    runs-on: ${{ matrix.os.runs-on }}
+    runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     needs:
       - build
@@ -136,11 +153,13 @@ jobs:
       matrix:
         os:
           - name: Linux
-            runs-on: ubuntu-latest
+            runs-on:
+              intel: ubuntu-latest
             python_platform: linux
             container: docker://python:{0}-bookworm
           - name: Windows
-            runs-on: windows-latest
+            runs-on:
+              intel: windows-latest
             python_platform: win32
             vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
           - name: macOS
@@ -178,10 +197,15 @@ jobs:
             matrix: 6.5.2
             major: 6
             tox: qt6
+        arch:
+          - name: Intel
+            matrix: intel
+          - name: ARM
+            matrix: arm
         bitness:
-          - name: x32
-            action: x86
-            ilammy: x86
+#          - name: x32
+#            action: x86
+#            ilammy: x86
           - name: x64
             action: x64
             ilammy: x64
@@ -198,20 +222,20 @@ jobs:
               name: 3.10
             os:
               name: macOS
-          - bitness:
-              name: x32
-            os:
-              name: Linux
-          - bitness:
-              name: x32
-            os:
-              name: macOS
-          - bitness:
-              name: x32
-            os:
-              name: Windows
-            qt:
-              major: 6
+#          - bitness:
+#              name: x32
+#            os:
+#              name: Linux
+#          - bitness:
+#              name: x32
+#            os:
+#              name: macOS
+#          - bitness:
+#              name: x32
+#            os:
+#              name: Windows
+#            qt:
+#              major: 6
     env:
       QT_VERSION: ${{ matrix.qt.env }}
 

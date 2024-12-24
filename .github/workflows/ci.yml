@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
+    name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     strategy:
@@ -59,10 +59,10 @@ jobs:
           - name: ARM
             matrix: arm
         bitness:
-#          - name: x32
+#          - name: 32
 #            action: x86
 #            ilammy: x86
-          - name: x64
+          - name: 64
             action: x64
             ilammy: x64
         exclude:

@@ -39,9 +39,9 @@ jobs:
             action: '3.12'
             docker: '3.12'
         qt:
-          - name: 5.15.3
-            env: 5.15.3
-            matrix: 5.15.3
+          - name: 5.15.2
+            env: 5.15.2
+            matrix: 5.15.2
             major: 5
             tox: qt5
           - name: 6.5.2

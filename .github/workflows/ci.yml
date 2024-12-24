@@ -138,7 +138,7 @@ jobs:
           name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
           path: dist/
   test:
-    name: Test ${{ matrix.os.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
+    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     needs:

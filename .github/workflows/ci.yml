@@ -317,7 +317,7 @@ jobs:
       - name: Download all wheels
         uses: actions/download-artifact@v4
         with:
-          name: *
+          name: '*'
           path: dist/
       - name: Upload to all_wheels
         uses: actions/upload-artifact@v4

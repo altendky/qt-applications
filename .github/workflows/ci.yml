@@ -143,7 +143,7 @@ jobs:
           name: all_wheels
           path: dist/
   test:
-    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }}-${{ matrix.bitness.name }} ${{ matrix.qt.name }}
+    name: Test ${{ matrix.os.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     needs:
@@ -210,18 +210,30 @@ jobs:
             action: x64
             ilammy: x64
         exclude:
+          - arch:
+              matrix: arm
+            os:
+              name: Linux
+          - arch:
+              matrix: arm
+            os:
+              name: Windows
           # fails on macos arm runners since they don't provide builds < 3.11
           # Error: dyld[3131]: Library not loaded: /usr/local/opt/gettext/lib/libintl.8.dylib
           - python:
               name: 3.9
             os:
               name: macOS
+            arch:
+              matrix: arm
           # fails on macos arm runners since they don't provide builds < 3.11
           # Error: dyld[3131]: Library not loaded: /usr/local/opt/gettext/lib/libintl.8.dylib
           - python:
               name: 3.10
             os:
               name: macOS
+            arch:
+              matrix: arm
 #          - bitness:
 #              name: x32
 #            os:

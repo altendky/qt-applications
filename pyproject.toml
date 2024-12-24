@@ -14,7 +14,7 @@ requires = [
    "pylddwrap~=1.2",
    "requests",
    "setuptools",
-   "versioneer-518 == 0.29",
+   "versioneer == 0.29",
    "wheel",
 ]
 build-backend = "setuptools.build_meta"

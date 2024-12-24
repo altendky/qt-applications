@@ -163,7 +163,9 @@ jobs:
             python_platform: win32
             vs_path: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat
           - name: macOS
-            runs-on: macos-latest
+            runs-on:
+              arm: macos-latest
+              intel: macos-13
             python_platform: darwin
         python:
           - name: '3.9'

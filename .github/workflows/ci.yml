@@ -133,12 +133,12 @@ jobs:
           mkdir -p dist/
           python -m build --wheel --outdir dist/ .
       - name: Archive individual wheel
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Archive all wheels
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: all_wheels
           path: dist/
@@ -258,9 +258,9 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - name: Download
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
@@ -320,7 +320,7 @@ jobs:
         run: |
           git config --global --add safe.directory $GITHUB_WORKSPACE
       - name: Download all wheels
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: all_wheels
           path: dist/

@@ -200,10 +200,10 @@ jobs:
           - name: ARM
             matrix: arm
         bitness:
-#          - name: x32
+#          - name: 32
 #            action: x86
 #            ilammy: x86
-          - name: x64
+          - name: 64
             action: x64
             ilammy: x64
         exclude:

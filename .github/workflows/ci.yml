@@ -139,7 +139,7 @@ jobs:
           - name: Linux
             runs-on: ubuntu-latest
             python_platform: linux
-            container: docker://python:{0}-buster
+            container: docker://python:{0}-bookworm
           - name: Windows
             runs-on: windows-latest
             python_platform: win32
@@ -251,7 +251,7 @@ jobs:
   maybe_publish:
     name: Maybe Publish
     runs-on: ubuntu-latest
-    container: docker://python:3.10-buster
+    container: docker://python:3.12-bookworm
     needs:
       - test
     steps:

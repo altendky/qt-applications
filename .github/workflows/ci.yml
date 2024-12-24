@@ -139,7 +139,7 @@ jobs:
       - name: Archive individual wheel
         uses: actions/upload-artifact@v4
         with:
-          name: Wheel ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
           path: dist/
   test:
     name: Test ${{ matrix.os.name }} ${{ matrix.python.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
@@ -263,7 +263,7 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v4
         with:
-          name: Wheel ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
           path: dist/
       - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
         if: matrix.os.python_platform != 'linux'
@@ -325,7 +325,7 @@ jobs:
       - name: Download all wheels
         uses: actions/download-artifact@v4
         with:
-          name: 'Wheel *'
+          name: '*'
           path: dist/
       - name: Upload to all_wheels
         uses: actions/upload-artifact@v4

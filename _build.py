@@ -739,9 +739,13 @@ class Configuration:
     def build(cls, environment, build_path, package_path):
         platform = sys.platform
         qt_version = environment['QT_VERSION']
+        qt_version_ints = tuple(int(s) for s in qt_version.split('.'))
 
         if platform == 'linux':
-            qt_compiler = 'gcc_64'
+            if qt_version_ints >= (6, 7):
+                qt_compiler = 'linux_gcc_64'
+            else:
+                qt_compiler = 'gcc_64'
             qt_architecture = 'gcc_64'
         elif platform == 'darwin':
             qt_compiler = 'clang_64'
@@ -749,7 +753,7 @@ class Configuration:
         elif platform == 'win32':
             # TODO: change the actual storage
             
-            if tuple(int(s) for s in qt_version.split('.')) >= (5, 15):
+            if qt_version_ints >= (5, 15):
                 year = '2019'
             else:
                 year = '2017'

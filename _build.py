@@ -742,11 +742,11 @@ class Configuration:
         qt_version_ints = tuple(int(s) for s in qt_version.split('.'))
 
         if platform == 'linux':
+            qt_compiler = 'gcc_64'
             if qt_version_ints >= (6, 7):
-                qt_compiler = 'linux_gcc_64'
+                qt_architecture = 'linux_gcc_64'
             else:
-                qt_compiler = 'gcc_64'
-            qt_architecture = 'gcc_64'
+                qt_architecture = 'gcc_64'
         elif platform == 'darwin':
             qt_compiler = 'clang_64'
             qt_architecture = 'clang_64'

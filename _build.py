@@ -743,17 +743,18 @@ class Configuration:
 
         if platform == 'linux':
             qt_compiler = 'gcc_64'
+            qt_architecture = 'gcc_64'
             if qt_version_ints >= (6, 7):
-                qt_architecture = 'linux_gcc_64'
-            else:
-                qt_architecture = 'gcc_64'
+                qt_architecture = f'linux_{qt_architecture}'
         elif platform == 'darwin':
             qt_compiler = 'clang_64'
             qt_architecture = 'clang_64'
         elif platform == 'win32':
             # TODO: change the actual storage
             
-            if qt_version_ints >= (5, 15):
+            if qt_version_ints >= (6, 8):
+                year = '2022'
+            elif qt_version_ints >= (5, 15):
                 year = '2019'
             else:
                 year = '2017'

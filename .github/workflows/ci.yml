@@ -48,9 +48,9 @@ jobs:
             matrix: 5.15.2
             major: 5
             tox: qt5
-          - name: 6.8.0
-            env: 6.8.0
-            matrix: 6.8.0
+          - name: 6.8.1
+            env: 6.8.1
+            matrix: 6.8.1
             major: 6
             tox: qt6
         arch:
@@ -171,9 +171,9 @@ jobs:
             matrix: 5.15.2
             major: 5
             tox: qt5
-          - name: 6.8.0
-            env: 6.8.0
-            matrix: 6.8.0
+          - name: 6.8.1
+            env: 6.8.1
+            matrix: 6.8.1
             major: 6
             tox: qt6
         arch:

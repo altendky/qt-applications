@@ -119,13 +119,17 @@ setuptools.setup(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
         'Topic :: Software Development',
         'Topic :: Utilities',
+    ],
+    install_requires=[
+        # TODO: forcing since we use pkg_resources, though we should stop using that as it is deprecated
+        "setuptools",
     ],
     cmdclass={'bdist_wheel': BdistWheel, 'build_py': _build.BuildPy},
     distclass=Dist,
@@ -133,5 +137,5 @@ setuptools.setup(
     package_dir={import_name: 'src/qt_applications'},
     version=qt_applications_version,
     include_package_data=True,
-    python_requires=">=3.7",
+    python_requires=">=3.9",
 )

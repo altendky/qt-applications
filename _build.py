@@ -739,17 +739,22 @@ class Configuration:
     def build(cls, environment, build_path, package_path):
         platform = sys.platform
         qt_version = environment['QT_VERSION']
+        qt_version_ints = tuple(int(s) for s in qt_version.split('.'))
 
         if platform == 'linux':
             qt_compiler = 'gcc_64'
             qt_architecture = 'gcc_64'
+            if qt_version_ints >= (6, 7):
+                qt_architecture = f'linux_{qt_architecture}'
         elif platform == 'darwin':
             qt_compiler = 'clang_64'
             qt_architecture = 'clang_64'
         elif platform == 'win32':
             # TODO: change the actual storage
             
-            if tuple(int(s) for s in qt_version.split('.')) >= (5, 15):
+            if qt_version_ints >= (6, 8):
+                year = '2022'
+            elif qt_version_ints >= (5, 15):
                 year = '2019'
             else:
                 year = '2017'
@@ -1098,7 +1103,7 @@ def build(configuration: Configuration):
         copy_actions = {
             action
             for action in copy_actions
-            if action.destination.suffix != '.a'
+            if action.destination.suffix not in {'.a', '.dSYM'}
         }
 
     checkpoint('Write Applications dict')

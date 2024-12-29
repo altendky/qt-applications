@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
+    name: Build ${{ matrix.os.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     strategy:
@@ -58,13 +58,6 @@ jobs:
             matrix: intel
           - name: ARM
             matrix: arm
-        bitness:
-#          - name: 32
-#            action: x86
-#            ilammy: x86
-          - name: 64
-            action: x64
-            ilammy: x64
         exclude:
           - qt:
               major: 5
@@ -78,20 +71,6 @@ jobs:
               matrix: arm
             os:
               name: Windows
-#          - bitness:
-#              name: x32
-#            os:
-#              name: Linux
-#          - bitness:
-#              name: x32
-#            os:
-#              name: macOS
-#          - bitness:
-#              name: x32
-#            os:
-#              name: Windows
-#            qt:
-#              major: 6
     env:
       QT_VERSION: ${{ matrix.qt.env }}
 
@@ -99,12 +78,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
+      - name: Set up Python ${{ matrix.python.name }}
         if: matrix.os.python_platform != 'linux'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.action }}
-#          architecture: ${{ matrix.bitness.action }}
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools
@@ -130,7 +108,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         if: matrix.os.python_platform == 'win32'
         with:
-          arch: ${{ matrix.bitness.ilammy }}
+          arch: x64
       - name: Build wheel
         # native shell for nmake...  keep commands here simple i guess
         run: |
@@ -139,10 +117,10 @@ jobs:
       - name: Archive individual wheel
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}
           path: dist/
   test:
-    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}} ${{ matrix.bitness.name }}
+    name: Test ${{ matrix.os.name }} ${{ matrix.python.name }} Qt ${{ matrix.qt.name }} ${{ matrix.arch.name}}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     container: ${{ format(matrix.os.container, matrix.python.docker) }}
     needs:
@@ -203,13 +181,6 @@ jobs:
             matrix: intel
           - name: ARM
             matrix: arm
-        bitness:
-#          - name: 32
-#            action: x86
-#            ilammy: x86
-          - name: 64
-            action: x64
-            ilammy: x64
         exclude:
           - arch:
               matrix: arm
@@ -239,20 +210,6 @@ jobs:
               major: 5
             arch:
               matrix: arm
-#          - bitness:
-#              name: x32
-#            os:
-#              name: Linux
-#          - bitness:
-#              name: x32
-#            os:
-#              name: macOS
-#          - bitness:
-#              name: x32
-#            os:
-#              name: Windows
-#            qt:
-#              major: 6
     env:
       QT_VERSION: ${{ matrix.qt.env }}
 
@@ -263,14 +220,13 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v4
         with:
-          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}-${{ matrix.bitness.name }}
+          name: ${{ matrix.os.name }} Qt ${{ matrix.qt.name }}-${{ matrix.arch.name }}
           path: dist/
-      - name: Set up Python ${{ matrix.python.name }}-${{ matrix.bitness.name }}
+      - name: Set up Python ${{ matrix.python.name }}
         if: matrix.os.python_platform != 'linux'
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python.action }}
-#          architecture: ${{ matrix.bitness.action }}
       - name: pip/setuptools/tox
         run: |
           python -m pip install --upgrade pip setuptools

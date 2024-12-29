@@ -125,7 +125,7 @@ setuptools.setup(
         'Topic :: Utilities',
     ],
     install_requires=[
-        # forcing since we use pkg_resources, though we should stop using that as it is deprecated
+        # TODO: forcing since we use pkg_resources, though we should stop using that as it is deprecated
         "setuptools",
     ],
     cmdclass={'bdist_wheel': BdistWheel, 'build_py': _build.BuildPy},

@@ -293,8 +293,9 @@ jobs:
         run: |
           pip install --upgrade twine
       - name: Maybe publish
+        if: github.event_name == 'push' && github.ref_type == 'tag'
         run: |
-          python twineontag.py
+          twine upload --non-interactive --skip-existing --verbose --disable-progress-bar dist/*.whl
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}

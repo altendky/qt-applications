@@ -1103,7 +1103,7 @@ def build(configuration: Configuration):
         copy_actions = {
             action
             for action in copy_actions
-            if action.destination.suffix != '.a'
+            if action.destination.suffix not in {'.a', '.dSYM'}
         }
 
     checkpoint('Write Applications dict')

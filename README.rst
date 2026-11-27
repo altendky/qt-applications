@@ -3,6 +3,14 @@ qt-applications
 ===============
 
 
+**This repository has moved.** qt-applications is now developed in
+`altendky/pyqt-tools <https://github.com/altendky/pyqt-tools/tree/main/packages/qt-applications>`__,
+under ``packages/qt-applications``.  qt-applications, qt-tools, pyqt-plugins and
+pyqt-tools depend on each other, so they were merged into that one repository
+where a change across them can be made and tested together.  They are still
+published to PyPI as separate packages.  This repository is archived, so please
+open issues and pull requests there.
+
 |PyPI| |Pythons| |GitHub|
 
 Perhaps docs will follow but for now see `the pyqt-tools readme`_ and
